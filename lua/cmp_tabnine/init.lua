@@ -31,32 +31,38 @@ local function get_paths(root, paths)
 end
 
 -- do this once on init, otherwise on restart this dows not work
-local binaries_folder = fn.expand("<sfile>:p:h:h:h") .. "/binaries"
+local binaries_folder = fn.expand('<sfile>:p:h:h:h') .. '/binaries'
 
 -- locate the binary here, as expand is relative to the calling script name
 local function binary()
-        local versions_folders = fn.globpath(binaries_folder, '*', false, true)
-        local versions = {}
-        for _, path in ipairs(versions_folders) do
-                for i in string.gmatch(path, '/[^/]*$') do
-                        local version, _ = string.gsub(i, '/', '')
-                        table.insert(versions, {path=path, version=version})
-                end
-        end
-        table.sort(versions, function (a, b) return a.version < b.version end)
-        local latest = versions[#versions]
+	local versions_folders = fn.globpath(binaries_folder, '*', false, true)
+	local versions = {}
+	for _, path in ipairs(versions_folders) do
+		for version in string.gmatch(path, '/([0-9.]+)$') do
+			if version then
+				table.insert(versions, {path=path, version=version})
+			end
+		end
+	end
+	table.sort(versions, function (a, b) return a.version < b.version end)
+	local latest = versions[#versions]
 
-        local platform = nil
-        if fn.has('win32') == 1 then
-                platform = 'i686-pc-windows-gnu'
-        elseif fn.has('win64') == 1 then
-                platform = 'x86_64-pc-windows-gnu'
-        elseif fn.has("mac") == 1 then
-                platform = 'x86_64-apple-darwin'
-        elseif fn.has('unix') == 1 then
-                platform = 'x86_64-unknown-linux-musl'
-        end
-        return latest.path .. '/' .. platform .. '/' .. 'TabNine'
+	local platform = nil
+	local arch, _ = string.gsub(fn.system('uname -m'), '\n$', '')
+	if fn.has('win32') == 1 then
+		platform = 'i686-pc-windows-gnu'
+	elseif fn.has('win64') == 1 then
+		platform = 'x86_64-pc-windows-gnu'
+	elseif fn.has('mac') == 1 then
+		if arch == 'arm64' then
+			platform = 'aarch64-apple-darwin'
+		else
+			platform = arch .. '-apple-darwin'
+		end
+	elseif fn.has('unix') == 1 then
+		platform = arch .. '-unknown-linux-musl'
+	end
+	return latest.path .. '/' .. platform .. '/' .. 'TabNine'
 end
 
 local conf_defaults = {
