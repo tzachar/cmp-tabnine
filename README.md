@@ -23,11 +23,10 @@ And later, enable the plugin:
    ```lua
 require'cmp'.setup {
 	sources = {
-		{ name = 'tabnine' },
-		{ name = 'buffer' },
-		{ name = 'calc' },
-		{ name = 'path' },
-		{ name = 'emoji' },
+		{ name = 'cmp-tabnine' },
+		.
+		.
+		.
 	},
 }
    ```

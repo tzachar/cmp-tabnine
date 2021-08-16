@@ -3,5 +3,5 @@ if exists('g:loaded_cmp_tabnine')
 endif
 let g:loaded_cmp_tabnine = v:true
 
-lua require'cmp'.register_source('tabnine', require'cmp_tabnine'.new())
+lua require'cmp'.register_source('cmp-tabnine', require'cmp_tabnine'.new())
 

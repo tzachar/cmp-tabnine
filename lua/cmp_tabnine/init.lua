@@ -109,8 +109,17 @@ function Source.get_metadata(_)
 	}
 end
 
+Source.is_available = function()
+	return (Source.job ~= 0)
+end
+
+
+Source.get_debug_name = function()
+	return 'TabNine'
+end
+
+
 Source._do_complete = function()
-	-- print('do complete')
 	if Source.job == 0 then
 		return
 	end
@@ -174,26 +183,6 @@ Source._on_exit = function(_, code)
 	})
 end
 
-local function documentation(completion_item)
-	local document = {}
-	local show = false
-	-- table.insert(document, '```' .. args.context.filetype)
-	table.insert(document, '```')
-	-- only add the detail when its not a % value
-	if completion_item and completion_item.detail and #completion_item.detail > 3 then
-		table.insert(document, completion_item.detail)
-		table.insert(document, ' ')
-		show = true
-	end
-
-	if completion_item.documentation then
-		table.insert(document, completion_item.documentation)
-		show = true
-	end
-	table.insert(document, '```')
-	return document
-end
-
 Source._on_stdout = function(_, data, _)
       -- {
       --   "old_prefix": "wo",
@@ -231,25 +220,23 @@ Source._on_stdout = function(_, data, _)
 							label = result.new_prefix;
 							filerText = result.new_prefix;
 							insertText = result.new_prefix;
-							details = '';
-							labelDetails = {
-								description = '';
-							};
-							user_data = result;
-							documentation = documentation(result);
+							data = result;
 							sortText = (result.details or '') .. result.new_prefix;
 						}
 						if result.detail ~= nil then
 							local percent = tonumber(string.sub(result.detail, 0, -2))
 							if percent ~= nil then
 								item['priority'] = base_priority + percent * 0.001
-								item.labelDetails.description = item.labelDetails.description .. ' ' .. result.detail
-								item.label = item.label .. ' ' .. result.detail
+								item['labelDetails'] = {
+									detail = result.details
+								}
+								item['details'] = result.details
+								-- item.label = item.label .. ' ' .. result.detail
 							end
 						end
-						item.labelDetails.description = item.labelDetails.description .. ' [TN]'
-						item.label = item.label .. ' [TN]'
-						-- item['kind'] = vim.lsp.protocol.CompletionItemKind[result.kind] or nil;
+						if result.kind then
+							item['kind'] = result.kind
+						end
 						table.insert(items, item)
 					end
 				else
