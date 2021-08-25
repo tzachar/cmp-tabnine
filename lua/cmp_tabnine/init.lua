@@ -218,7 +218,7 @@ Source._on_stdout = function(_, data, _)
 					for _, result in ipairs(results) do
 						local item = {
 							label = result.new_prefix;
-							filerText = result.new_prefix;
+							filterText = result.new_prefix;
 							insertText = result.new_prefix;
 							data = result;
 							sortText = (result.details or '') .. result.new_prefix;
