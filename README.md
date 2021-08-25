@@ -23,7 +23,7 @@ And later, enable the plugin:
    ```lua
 require'cmp'.setup {
 	sources = {
-		{ name = 'cmp-tabnine' },
+		{ name = 'cmp_tabnine' },
 		.
 		.
 		.
