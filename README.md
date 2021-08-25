@@ -24,38 +24,29 @@ And later, enable the plugin:
 require'cmp'.setup {
 	sources = {
 		{ name = 'cmp_tabnine' },
-		.
-		.
-		.
 	},
 }
    ```
 
 # Setup
 
-Coming...
-
-<!-- 
-# Completion Behavior
-
-In general, as TabNine is a predictive completion engine, you would normally
-want TabNine to suggest completions after every keypress. In some instances this
-may be either prohibitive or annoying. To wor around it, you can use the
-`ignore_pattern` config option. 
-`ignore_pattern` is an RE specifying when not to suggest completions based on the character
-before the cursor. For example, to not fire completions after an opening
-bracket, set `ignore_pattern = '[(]'`. To disable this functionality, leave it
-empty or set to an empty string.
--->
-
-# Packer Issues
-
-Sometimes, Packer fails to install the plugin (though cloning the repo
-succeeds). Until this is resolved, perform the following:
-```sh
-cd ~/.local/share/nvim/site/pack/packer/start/cmp-tabnine
-./install.sh
+```lua
+local tabnine = require('cmp_tabnine.config')
+tabnine:setup({
+        max_lines = 1000;
+        max_num_results = 20;
+        sort = true;
+})
 ```
 
-Change `~/.local/share/nvim/site/pack/packer/start/cmp-tabnine` to the path
-Packer installs packages in your setup.
+## `max_num_results`
+
+How many lines of buffer context to pass to TabNine
+
+## `max_num_results`
+
+How many results to return
+
+## `sort`
+
+Sort results by returned priority

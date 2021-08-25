@@ -1,7 +1,7 @@
 local cmp = require'cmp'
 local api = vim.api
 local fn = vim.fn
---
+local conf = require('cmp_tabnine.config')
 
 local function dump(...)
     local objects = vim.tbl_map(vim.inspect, {...})
@@ -17,18 +17,6 @@ local function json_decode(data)
 	end
 end
 
-
---- _get_paths
-local function get_paths(root, paths)
-	local c = root
-	for _, path in ipairs(paths) do
-		c = c[path]
-		if not c then
-			return nil
-		end
-	end
-	return c
-end
 
 -- do this once on init, otherwise on restart this dows not work
 local binaries_folder = fn.expand('<sfile>:p:h:h:h') .. '/binaries'
@@ -65,29 +53,6 @@ local function binary()
 	return latest.path .. '/' .. platform .. '/' .. 'TabNine'
 end
 
-local conf_defaults = {
-	max_lines = 1000;
-	max_num_results = 20;
-	sort = false;
-	priority = 5000;
-	show_prediction_strength = true;
-	ignore_pattern = '';
-}
-
--- TODO: add setup function
-local function conf(key)
-	-- for now, we use conf_defaults
-	local c = conf_defaults
-	local value = get_paths(c, {'source', 'tabnine', key})
-	if value ~= nil then
-		return value
-	elseif conf_defaults[key] ~= nil then
-		return conf_defaults[key]
-	else
-		error()
-	end
-end
-
 local Source = {
 	callback = nil;
 	job = 0;
@@ -99,15 +64,6 @@ function Source.new()
 	return self
 end
 
-
---- get_metadata
-function Source.get_metadata(_)
-	return {
-		priority = 5000;
-		menu = '[TN]';
-		sort = conf('sort');
-	}
-end
 
 Source.is_available = function()
 	return (Source.job ~= 0)
@@ -123,7 +79,7 @@ Source._do_complete = function()
 	if Source.job == 0 then
 		return
 	end
-	local max_lines = conf('max_lines')
+	local max_lines = conf:get('max_lines')
 
 	local cursor=api.nvim_win_get_cursor(0)
 	local cur_line = api.nvim_get_current_line()
@@ -152,7 +108,7 @@ Source._do_complete = function()
 			region_includes_beginning = region_includes_beginning,
 			region_includes_end = region_includes_end,
 			filename = fn["expand"]("%:p"),
-			max_num_results = conf('max_num_results')
+			max_num_results = conf:get('max_num_results')
 		}
 	}
 
@@ -199,8 +155,8 @@ Source._on_stdout = function(_, data, _)
 	-- dump(data)
 	local items = {}
 	local old_prefix = ""
-	local show_strength = conf('show_prediction_strength')
-	local base_priority = conf('priority')
+	local show_strength = conf:get('show_prediction_strength')
+	local base_priority = conf:get('priority')
 
 	for _, jd in ipairs(data) do
 		if jd ~= nil and jd ~= '' then
@@ -256,7 +212,7 @@ Source._on_stdout = function(_, data, _)
 		end
 	end)
 
-	items = {unpack(items, 1, conf('max_num_results'))}
+	items = {unpack(items, 1, conf:get('max_num_results'))}
 	--
 	-- now, if we have a callback, send results
 	if Source.callback then
@@ -271,6 +227,5 @@ end
 function Source:get_trigger_characters(params)
   return { ':', '.',  '(', '[', ' ', }
 end
-
 
 return Source
