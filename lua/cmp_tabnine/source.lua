@@ -163,7 +163,6 @@ end
 function Source.complete(self, request, callback)
 	Source.callback = callback
 	Source._do_complete()
-	callback(nil)
 end
 
 Source._on_err = function(_, _, _)
