@@ -183,10 +183,9 @@ Source._on_stdout = function(_, data, _)
 							if percent ~= nil then
 								item['priority'] = base_priority + percent * 0.001
 								item['labelDetails'] = {
-									detail = result.details
+									detail = result.detail
 								}
-								item['details'] = result.details
-								-- item.label = item.label .. ' ' .. result.detail
+								item['details'] = result.detail
 							end
 						end
 						if result.kind then
@@ -225,7 +224,7 @@ Source._on_stdout = function(_, data, _)
 end
 
 function Source:get_trigger_characters(params)
-  return { ':', '.',  '(', '[', ' ', }
+  return { ':', '.',  '(', '[', }
 end
 
 return Source
