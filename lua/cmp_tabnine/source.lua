@@ -75,27 +75,26 @@ Source.get_debug_name = function()
 end
 
 
-Source._do_complete = function()
+Source._do_complete = function(ctx)
 	if Source.job == 0 then
 		return
 	end
 	local max_lines = conf:get('max_lines')
-
-	local cursor=api.nvim_win_get_cursor(0)
-	local cur_line = api.nvim_get_current_line()
-	local cur_line_before = string.sub(cur_line, 0, cursor[2])
-	local cur_line_after = string.sub(cur_line, cursor[2]+1) -- include current character
+	local cursor = ctx.context.cursor
+	local cur_line = ctx.context.cursor_line
+	local cur_line_before = string.sub(cur_line, 0, cursor.col)
+	local cur_line_after = string.sub(cur_line, cursor.col + 1) -- include current character
 
 	local region_includes_beginning = false
 	local region_includes_end = false
-	if cursor[1] - max_lines <= 1 then region_includes_beginning = true end
-	if cursor[1] + max_lines >= fn['line']('$') then region_includes_end = true end
+	if cursor.line - max_lines <= 1 then region_includes_beginning = true end
+	if cursor.line + max_lines >= fn['line']('$') then region_includes_end = true end
 
-	local lines_before = api.nvim_buf_get_lines(0, cursor[1] - max_lines , cursor[1]-1, false)
+	local lines_before = api.nvim_buf_get_lines(0, cursor.line - max_lines , cursor.line - 1, false)
 	table.insert(lines_before, cur_line_before)
 	local before = table.concat(lines_before, "\n")
 
-	local lines_after = api.nvim_buf_get_lines(0, cursor[1], cursor[1] + max_lines, false)
+	local lines_after = api.nvim_buf_get_lines(0, cursor.line, cursor.line + max_lines, false)
 	table.insert(lines_after, 1, cur_line_after)
 	local after = table.concat(lines_after, "\n")
 
@@ -116,9 +115,9 @@ Source._do_complete = function()
 end
 
 --- complete
-function Source.complete(self, request, callback)
+function Source.complete(self, ctx, callback)
 	Source.callback = callback
-	Source._do_complete()
+	Source._do_complete(ctx)
 end
 
 Source._on_err = function(_, _, _)
@@ -215,9 +214,6 @@ Source._on_stdout = function(_, data, _)
 	--
 	-- now, if we have a callback, send results
 	if Source.callback then
-		if #items == 0 then
-			return
-		end
 		Source.callback(items)
 	end
 	Source.callback = nil;
