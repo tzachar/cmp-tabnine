@@ -55,7 +55,7 @@ Sort results by returned priority
 
 You can use the following to pretty print the completion menu (requires
 [lspkind](https://github.com/onsails/lspkind-nvim) and patched fonts
-(https://www.nerdfonts.com):
+(https://www.nerdfonts.com)):
 
 ```lua
 local lspkind = require('lspkind')
