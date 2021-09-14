@@ -34,6 +34,10 @@ local function binary()
 	end
 	table.sort(versions, function (a, b) return a.version < b.version end)
 	local latest = versions[#versions]
+	if not latest then
+		vim.notify('cmp-tabnine: Cannot find installed TabNine. Please run install.sh')
+		return
+	end
 
 	local platform = nil
 	local arch, _ = string.gsub(fn.system('uname -m'), '\n$', '')
@@ -130,7 +134,11 @@ Source._on_exit = function(_, code)
 		return
 	end
 
-	Source.job = fn.jobstart({binary(), '--client=cmp.vim'}, {
+	local bin = binary()
+	if not bin then
+		return
+	end
+	Source.job = fn.jobstart({bin, '--client=cmp.vim'}, {
 		on_stderr = Source._on_stderr;
 		on_exit = Source._on_exit;
 		on_stdout = Source._on_stdout;
