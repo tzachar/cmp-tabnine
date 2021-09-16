@@ -17,9 +17,27 @@ local function json_decode(data)
 	end
 end
 
+local function get_path_separator()
+    if ((fn.has('win64') == 1) or (fn.has('win32') == 1)) then return '\\' end
+    return '/'
+end
+
+function script_path()
+   local str = debug.getinfo(2, "S").source:sub(2)
+   return str:match("(.*" .. get_path_separator() .. ")")
+end
+
+local function get_parent_dir(path)
+    local separator = get_path_separator()
+    local pattern = "^(.+)" .. separator
+    -- if path has separator at end, remove it
+    path = path:gsub(separator .. '*$', '')
+    local parent_dir = path:match(pattern) .. separator
+    return parent_dir
+end
 
 -- do this once on init, otherwise on restart this dows not work
-local binaries_folder = fn.expand('<sfile>:p:h:h:h') .. '/binaries'
+local binaries_folder = get_parent_dir(get_parent_dir(script_path())) .. 'binaries'
 
 -- locate the binary here, as expand is relative to the calling script name
 local function binary()
