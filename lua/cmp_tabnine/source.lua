@@ -201,7 +201,7 @@ Source._on_stdout = function(_, data, _)
 							filterText = result.new_prefix;
 							insertText = result.new_prefix;
 							data = result;
-							sortText = (result.details or '') .. result.new_prefix;
+							sortText = result.new_prefix;
 						}
 						if result.detail ~= nil then
 							local percent = tonumber(string.sub(result.detail, 0, -2))
@@ -210,11 +210,19 @@ Source._on_stdout = function(_, data, _)
 								item['labelDetails'] = {
 									detail = result.detail
 								}
-								item['details'] = result.detail
+								item['sortText'] = string.format("%02d", 100 - percent) .. item['sortText']
+							else
+								item['detail'] = result.detail
 							end
 						end
 						if result.kind then
 							item['kind'] = result.kind
+						end
+						if result.documentation then
+							item['documentation'] = result.documentation
+						end
+						if result.deprecated then
+							item['deprecated'] = result.deprecated
 						end
 						table.insert(items, item)
 					end
