@@ -22,7 +22,11 @@ local function get_path_separator()
     return '/'
 end
 
-function script_path()
+local function escape_tabstop_sign(str)
+  return string.gsub(str, "%$", "\\$")
+end
+
+local function script_path()
    local str = debug.getinfo(2, "S").source:sub(2)
    return str:match("(.*" .. get_path_separator() .. ")")
 end
@@ -96,6 +100,9 @@ Source.get_debug_name = function()
 	return 'TabNine'
 end
 
+-- pass ctx message from do_complete to on_output
+-- FIXME: It may lead to unmatch of ctx list because on_stdout may not be called
+Source.ctx_list = {}
 
 Source._do_complete = function(ctx)
 	if Source.job == 0 then
@@ -104,8 +111,8 @@ Source._do_complete = function(ctx)
 	local max_lines = conf:get('max_lines')
 	local cursor = ctx.context.cursor
 	local cur_line = ctx.context.cursor_line
-	local cur_line_before = string.sub(cur_line, 0, cursor.col)
-	local cur_line_after = string.sub(cur_line, cursor.col + 1) -- include current character
+	local cur_line_before = string.sub(cur_line, 1, cursor.col - 1)
+	local cur_line_after = string.sub(cur_line, cursor.col) -- include current character
 
 	local region_includes_beginning = false
 	local region_includes_end = false
@@ -116,7 +123,7 @@ Source._do_complete = function(ctx)
 	table.insert(lines_before, cur_line_before)
 	local before = table.concat(lines_before, "\n")
 
-	local lines_after = api.nvim_buf_get_lines(0, cursor.line, cursor.line + max_lines, false)
+	local lines_after = api.nvim_buf_get_lines(0, cursor.line + 1, cursor.line + max_lines, false)
 	table.insert(lines_after, 1, cur_line_after)
 	local after = table.concat(lines_after, "\n")
 
@@ -133,6 +140,7 @@ Source._do_complete = function(ctx)
 		}
 	}
 
+	table.insert(Source.ctx_list, ctx)
 	fn.chansend(Source.job, fn.json_encode(req) .. "\n")
 end
 
@@ -143,6 +151,7 @@ function Source.complete(self, ctx, callback)
 end
 
 Source._on_err = function(_, _, _)
+	table.remove(Source.ctx_list, 1)
 end
 
 Source._on_exit = function(_, code)
@@ -156,6 +165,7 @@ Source._on_exit = function(_, code)
 	if not bin then
 		return
 	end
+	Source.ctx_list = {}
 	Source.job = fn.jobstart({bin, '--client=cmp.vim'}, {
 		on_stderr = Source._on_stderr;
 		on_exit = Source._on_exit;
@@ -183,6 +193,9 @@ Source._on_stdout = function(_, data, _)
 	local show_strength = conf:get('show_prediction_strength')
 	local base_priority = conf:get('priority')
 
+	local ctx = table.remove(Source.ctx_list, 1)
+	local cursor = ctx.context.cursor
+
 	for _, jd in ipairs(data) do
 		if jd ~= nil and jd ~= '' then
 			local response = json_decode(jd)
@@ -194,15 +207,40 @@ Source._on_stdout = function(_, data, _)
 			else
 				local results = response.results
 				old_prefix = response.old_prefix
+
 				if results ~= nil then
 					for _, result in ipairs(results) do
+						local newText = result.new_prefix .. result.new_suffix
+
+						local old_suffix = result.old_suffix
+						if string.sub(old_suffix, -1) == "\n" then
+							old_suffix = string.sub(old_suffix, 1, -2)
+						end
+
 						local item = {
-							label = result.new_prefix;
-							filterText = result.new_prefix;
-							insertText = result.new_prefix;
+							label = newText;
+							filterText = newText;
 							data = result;
-							sortText = result.new_prefix;
+							textEdit = {
+								range = {
+									start = { line = cursor.line, character = cursor.col - #old_prefix - 1 },
+									['end'] = {  line = cursor.line, character = cursor.col  + #old_suffix - 1 };
+								};
+								newText = result.new_prefix;
+							};
+							sortText = newText;
 						}
+						-- This is a hack fix for cmp not displaying items of TabNine::config_dir, version, etc. because their
+						-- completion items get scores of 0 in the matching algorithm
+						if #old_prefix == 0 then
+							item['filterText'] = string.sub(ctx.context.cursor_before_line, ctx.offset) .. newText
+						end
+
+						if #result.new_suffix > 0 then
+							item["insertTextFormat"] = cmp.lsp.InsertTextFormat.Snippet
+							item["textEdit"].newText = escape_tabstop_sign(result.new_prefix) .. '${0}' .. escape_tabstop_sign(result.new_suffix);
+						end
+
 						if result.detail ~= nil then
 							local percent = tonumber(string.sub(result.detail, 0, -2))
 							if percent ~= nil then
@@ -248,7 +286,10 @@ Source._on_stdout = function(_, data, _)
 	--
 	-- now, if we have a callback, send results
 	if Source.callback then
-		Source.callback(items)
+		Source.callback({
+			items = items,
+			isIncomplete = true,
+		})
 	end
 	Source.callback = nil;
 end
