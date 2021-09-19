@@ -254,7 +254,7 @@ Source._on_stdout = function(_, data, _)
 end
 
 function Source:get_trigger_characters(params)
-  return { ':', '.',  '(', '[', }
+  return { ':', '.' }
 end
 
 return Source
