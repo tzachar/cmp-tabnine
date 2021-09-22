@@ -39,7 +39,7 @@ tabnine:setup({
 })
 ```
 
-## `max_num_results`
+## `max_lines`
 
 How many lines of buffer context to pass to TabNine
 
