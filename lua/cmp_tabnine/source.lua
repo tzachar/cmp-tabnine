@@ -226,7 +226,7 @@ Source._on_stdout = function(_, data, _)
 									start = { line = cursor.line, character = cursor.col - #old_prefix - 1 },
 									['end'] = {  line = cursor.line, character = cursor.col  + #old_suffix - 1 };
 								};
-								newText = result.new_prefix;
+								newText = newText;
 							};
 							sortText = newText;
 						}
@@ -288,7 +288,7 @@ Source._on_stdout = function(_, data, _)
 	if Source.callback then
 		Source.callback({
 			items = items,
-			isIncomplete = true,
+			isIncomplete = conf:get('run_on_every_keystroke'),
 		})
 	end
 	Source.callback = nil;

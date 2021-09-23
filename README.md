@@ -36,6 +36,7 @@ tabnine:setup({
         max_lines = 1000;
         max_num_results = 20;
         sort = true;
+	run_on_every_keystroke = true;
 })
 ```
 
@@ -50,6 +51,11 @@ How many results to return
 ## `sort`
 
 Sort results by returned priority
+
+
+## `run_on_every_keystroke`
+
+Generate new completion items on every keystroke. 
 
 # Pretty Printing Menu Items 
 
