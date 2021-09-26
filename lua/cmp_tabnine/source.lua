@@ -150,10 +150,6 @@ function Source.complete(self, ctx, callback)
 	Source._do_complete(ctx)
 end
 
-Source._on_err = function(_, _, _)
-	table.remove(Source.ctx_list, 1)
-end
-
 Source._on_exit = function(_, code)
 	-- restart..
 	if code == 143 then
@@ -167,7 +163,7 @@ Source._on_exit = function(_, code)
 	end
 	Source.ctx_list = {}
 	Source.job = fn.jobstart({bin, '--client=cmp.vim'}, {
-		on_stderr = Source._on_stderr;
+		on_stderr = nil;
 		on_exit = Source._on_exit;
 		on_stdout = Source._on_stdout;
 	})
@@ -187,7 +183,10 @@ Source._on_stdout = function(_, data, _)
       --   "user_message": [],
       --   "docs": []
       -- }
-	-- dump(data)
+	-- check that we have a context.
+	if #Source.ctx_list == 0 then
+		return
+	end
 	local items = {}
 	local old_prefix = ""
 	local show_strength = conf:get('show_prediction_strength')
