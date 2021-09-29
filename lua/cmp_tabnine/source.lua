@@ -293,8 +293,4 @@ Source._on_stdout = function(_, data, _)
 	Source.callback = nil;
 end
 
-function Source:get_trigger_characters(params)
-  return { ':', '.' }
-end
-
 return Source
