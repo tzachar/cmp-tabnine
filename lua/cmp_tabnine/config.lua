@@ -7,6 +7,7 @@ local conf_defaults = {
 	priority = 5000;
 	show_prediction_strength = true;
 	run_on_every_keystroke = true;
+	snippet_placeholder = '..';
 }
 
 

@@ -37,6 +37,7 @@ tabnine:setup({
         max_num_results = 20;
         sort = true;
 	run_on_every_keystroke = true;
+	snippet_placeholder = '..';
 })
 ```
 
@@ -56,6 +57,13 @@ Sort results by returned priority
 ## `run_on_every_keystroke`
 
 Generate new completion items on every keystroke. 
+
+## `snippet_placeholder`
+
+Indicates where the cursor will be placed in case a completion item is a
+snippet. Any string is accepted.
+
+For this to work properly, you need to setup snippet support for `nvim-cmp`.
 
 # Pretty Printing Menu Items 
 

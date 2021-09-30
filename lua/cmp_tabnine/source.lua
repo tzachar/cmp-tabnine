@@ -23,7 +23,7 @@ local function get_path_separator()
 end
 
 local function escape_tabstop_sign(str)
-  return string.gsub(str, "%$", "\\$")
+  return str:gsub("%$", "\\$")
 end
 
 local function script_path()
@@ -237,7 +237,11 @@ Source._on_stdout = function(_, data, _)
 
 						if #result.new_suffix > 0 then
 							item["insertTextFormat"] = cmp.lsp.InsertTextFormat.Snippet
-							item["textEdit"].newText = escape_tabstop_sign(result.new_prefix) .. '${0}' .. escape_tabstop_sign(result.new_suffix);
+							local snippet = escape_tabstop_sign(result.new_prefix) .. '$1' .. escape_tabstop_sign(result.new_suffix)
+							item["textEdit"].newText = snippet .. '$0'
+							if conf:get('snippet_placeholder') then
+								item["label"] = snippet:gsub('$1', conf:get('snippet_placeholder'))
+							end
 						end
 
 						if result.detail ~= nil then
