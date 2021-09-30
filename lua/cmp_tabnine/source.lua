@@ -26,6 +26,15 @@ local function escape_tabstop_sign(str)
   return str:gsub("%$", "\\$")
 end
 
+local function build_snippet(prefix, placeholder, suffix, add_final_tabstop)
+	local snippet = escape_tabstop_sign(prefix) .. placeholder .. escape_tabstop_sign(suffix)
+	if add_final_tabstop then
+		return snippet .. '$0'
+	else
+		return snippet
+	end
+end
+
 local function script_path()
    local str = debug.getinfo(2, "S").source:sub(2)
    return str:match("(.*" .. get_path_separator() .. ")")
@@ -237,11 +246,16 @@ Source._on_stdout = function(_, data, _)
 
 						if #result.new_suffix > 0 then
 							item["insertTextFormat"] = cmp.lsp.InsertTextFormat.Snippet
-							local snippet = escape_tabstop_sign(result.new_prefix) .. '$1' .. escape_tabstop_sign(result.new_suffix)
-							item["textEdit"].newText = snippet .. '$0'
-							if conf:get('snippet_placeholder') then
-								item["label"] = snippet:gsub('$1', conf:get('snippet_placeholder'))
-							end
+							item["label"] = build_snippet(
+								item["textEdit"].newText,
+								conf:get('snippet_placeholder'),
+								result.new_suffix,
+								false)
+							item["textEdit"].newText = build_snippet(
+								item["textEdit"].newText,
+								'$1',
+								result.new_suffix,
+								true)
 						end
 
 						if result.detail ~= nil then
