@@ -144,7 +144,8 @@ Source._do_complete = function(ctx)
 			after = after,
 			region_includes_beginning = region_includes_beginning,
 			region_includes_end = region_includes_end,
-			filename = fn["expand"]("%:p"),
+			-- filename = fn["expand"]("%:p"),
+			filename = vim.uri_from_bufnr(0):gsub('file://', ''),
 			max_num_results = conf:get('max_num_results')
 		}
 	}
@@ -247,12 +248,12 @@ Source._on_stdout = function(_, data, _)
 						if #result.new_suffix > 0 then
 							item["insertTextFormat"] = cmp.lsp.InsertTextFormat.Snippet
 							item["label"] = build_snippet(
-								item["textEdit"].newText,
+								result.new_prefix,
 								conf:get('snippet_placeholder'),
 								result.new_suffix,
 								false)
 							item["textEdit"].newText = build_snippet(
-								item["textEdit"].newText,
+								result.new_prefix,
 								'$1',
 								result.new_suffix,
 								true)
