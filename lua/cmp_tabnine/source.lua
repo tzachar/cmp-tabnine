@@ -238,6 +238,7 @@ Source._on_stdout = function(_, data, _)
 								newText = newText;
 							};
 							sortText = newText;
+							dup = 0,
 						}
 						-- This is a hack fix for cmp not displaying items of TabNine::config_dir, version, etc. because their
 						-- completion items get scores of 0 in the matching algorithm
