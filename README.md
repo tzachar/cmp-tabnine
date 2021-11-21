@@ -56,7 +56,7 @@ Sort results by returned priority
 
 ## `run_on_every_keystroke`
 
-Generate new completion items on every keystroke. For more info, check out #18
+Generate new completion items on every keystroke. For more info, check out tzachar/cmp-tabnine#18
 
 ## `snippet_placeholder`
 
