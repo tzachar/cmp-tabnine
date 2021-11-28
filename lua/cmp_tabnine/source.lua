@@ -91,6 +91,9 @@ end
 local Source = {
 	callback = nil;
 	job = 0;
+	-- pass ctx message from do_complete to on_output
+	-- FIXME: It may lead to unmatch of ctx list because on_stdout may not be called
+	ctx_list = {};
 }
 
 function Source.new()
@@ -108,10 +111,6 @@ end
 Source.get_debug_name = function()
 	return 'TabNine'
 end
-
--- pass ctx message from do_complete to on_output
--- FIXME: It may lead to unmatch of ctx list because on_stdout may not be called
-Source.ctx_list = {}
 
 Source._do_complete = function(ctx)
 	if Source.job == 0 then
