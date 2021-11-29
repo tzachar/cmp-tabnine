@@ -57,7 +57,7 @@ local function binary()
 	local versions_folders = fn.globpath(binaries_folder, '*', false, true)
 	local versions = {}
 	for _, path in ipairs(versions_folders) do
-		for version in string.gmatch(path, '/([0-9.]+)$') do
+		for version in string.gmatch(path, '([0-9.]+)$') do
 			if version then
 				table.insert(versions, {path=path, version=version})
 			end
@@ -72,10 +72,11 @@ local function binary()
 
 	local platform = nil
 	local arch, _ = string.gsub(fn.system('uname -m'), '\n$', '')
-	if fn.has('win32') == 1 then
-		platform = 'i686-pc-windows-gnu'
-	elseif fn.has('win64') == 1 then
+
+	if fn.has('win64') == 1 then
 		platform = 'x86_64-pc-windows-gnu'
+	elseif fn.has('win32') == 1 then
+		platform = 'i686-pc-windows-gnu'
 	elseif fn.has('mac') == 1 then
 		if arch == 'arm64' then
 			platform = 'aarch64-apple-darwin'
