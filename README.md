@@ -7,7 +7,7 @@ Using plug:
    ```viml
    Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
    ```
-Using plug(on windows)
+Using plug(on windows):
 	```viml
 	Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1'}
 	```
