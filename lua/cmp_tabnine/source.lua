@@ -57,7 +57,7 @@ local function binary()
 	local versions_folders = fn.globpath(binaries_folder, '*', false, true)
 	local versions = {}
 	for _, path in ipairs(versions_folders) do
-		for version in string.gmatch(path, '/([0-9.]+)$') do
+		for version in string.gmatch(path, '([0-9.]+)$') do
 			if version then
 				table.insert(versions, {path=path, version=version})
 			end
