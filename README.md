@@ -7,10 +7,10 @@ Using plug:
    ```viml
    Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
    ```
-Using plug(on windows):
-	```viml
+
+Using plug on windows:
+
 	Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1'}
-	```
 
 Using [Packer](https://github.com/wbthomason/packer.nvim/):
    ```viml
