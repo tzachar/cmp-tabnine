@@ -72,10 +72,11 @@ local function binary()
 
 	local platform = nil
 	local arch, _ = string.gsub(fn.system('uname -m'), '\n$', '')
-	if fn.has('win32') == 1 then
-		platform = 'i686-pc-windows-gnu'
-	elseif fn.has('win64') == 1 then
+
+	if fn.has('win64') == 1 then
 		platform = 'x86_64-pc-windows-gnu'
+	elseif fn.has('win32') == 1 then
+		platform = 'i686-pc-windows-gnu'
 	elseif fn.has('mac') == 1 then
 		if arch == 'arm64' then
 			platform = 'aarch64-apple-darwin'
