@@ -156,6 +156,10 @@ end
 
 --- complete
 function Source.complete(self, ctx, callback)
+	if conf:get('ignored_file_types')[vim.bo.filetype] then
+		callback()
+		return
+	end
 	Source.callback = callback
 	Source._do_complete(ctx)
 end

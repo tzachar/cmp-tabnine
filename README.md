@@ -47,11 +47,15 @@ require'cmp'.setup {
 ```lua
 local tabnine = require('cmp_tabnine.config')
 tabnine:setup({
-        max_lines = 1000;
-        max_num_results = 20;
-        sort = true;
+	max_lines = 1000;
+	max_num_results = 20;
+	sort = true;
 	run_on_every_keystroke = true;
 	snippet_placeholder = '..';
+	ignored_file_types = { -- default is not to ignore
+		-- uncomment to ignore in lua:
+		-- lua = true
+	};
 })
 ```
 
@@ -78,6 +82,16 @@ Indicates where the cursor will be placed in case a completion item is a
 snippet. Any string is accepted.
 
 For this to work properly, you need to setup snippet support for `nvim-cmp`.
+
+## `ignored_file_types` `(table: <string:bool>)`
+Which file types to ignore. For example:
+```
+ignored_file_types = {
+	html = true;
+}
+```
+will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
+
 
 # Pretty Printing Menu Items 
 
