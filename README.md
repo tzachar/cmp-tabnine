@@ -7,6 +7,10 @@ Using plug:
    ```viml
    Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
    ```
+Using plug(on windows)
+	```viml
+	Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1'}
+	```
 
 Using [Packer](https://github.com/wbthomason/packer.nvim/):
    ```viml
@@ -17,6 +21,16 @@ return require("packer").startup(
 	end
 )
    ```
+Using [Packer](https://github.com/wbthomason/packer.nvim/) on windows:
+   ```viml
+return require("packer").startup(
+	function(use)
+		use "hrsh7th/nvim-cmp" --completion
+		use {'tzachar/cmp-tabnine', run='powershell ./install.ps1', requires = 'hrsh7th/nvim-cmp'}
+	end
+)
+   ```
+
 
 And later, enable the plugin:
 
