@@ -1,46 +1,52 @@
 # cmp-tabnine
+
 TabNine source for [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
 
 # Install
 
 Using plug:
-   ```viml
-   Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
-   ```
+
+```viml
+Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+```
 
 Using plug on windows:
 
-	Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1'}
+```viml
+Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1'}
+```
 
 Using [Packer](https://github.com/wbthomason/packer.nvim/):
-   ```viml
+
+```lua
 return require("packer").startup(
 	function(use)
 		use "hrsh7th/nvim-cmp" --completion
 		use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
 	end
 )
-   ```
+```
+
 Using [Packer](https://github.com/wbthomason/packer.nvim/) on windows:
-   ```viml
+
+```lua
 return require("packer").startup(
 	function(use)
 		use "hrsh7th/nvim-cmp" --completion
 		use {'tzachar/cmp-tabnine', run='powershell ./install.ps1', requires = 'hrsh7th/nvim-cmp'}
 	end
 )
-   ```
-
+```
 
 And later, enable the plugin:
 
-   ```lua
+```lua
 require'cmp'.setup {
 	sources = {
 		{ name = 'cmp_tabnine' },
 	},
 }
-   ```
+```
 
 # Setup
 
@@ -71,7 +77,6 @@ How many results to return
 
 Sort results by returned priority
 
-
 ## `run_on_every_keystroke`
 
 Generate new completion items on every keystroke. For more info, check out [#18](https://github.com/tzachar/cmp-tabnine//issues/18)
@@ -84,16 +89,18 @@ snippet. Any string is accepted.
 For this to work properly, you need to setup snippet support for `nvim-cmp`.
 
 ## `ignored_file_types` `(table: <string:bool>)`
+
 Which file types to ignore. For example:
+
 ```
 ignored_file_types = {
 	html = true;
 }
 ```
+
 will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
 
-
-# Pretty Printing Menu Items 
+# Pretty Printing Menu Items
 
 You can use the following to pretty print the completion menu (requires
 [lspkind](https://github.com/onsails/lspkind-nvim) and patched fonts
