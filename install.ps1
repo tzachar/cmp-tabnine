@@ -12,13 +12,11 @@ $path = "$version/$platform"
 
 iwr "https://update.tabnine.com/bundles/$path/TabNine.zip" -OutFile TabNine.zip
 
-if(!(Test-Path ./binaries)){
-	mkdir binaries
-}
+$tabnine_path = "$env:LOCALAPPDATA/nvim-data/binaries/$path"
 
 if(!(Test-Path "./binaries/$path")){
-	mkdir -p "binaries/$path"
+	mkdir -p $tabnine_path
 }
 
-expand-archive Tabnine.zip -destinationpath "./binaries/$path" -force
+expand-archive Tabnine.zip -destinationpath $tabnine_path -force
 Remove-Item -Recurse "./TabNine.zip"

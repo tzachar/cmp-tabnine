@@ -54,7 +54,13 @@ local function get_parent_dir(path)
 end
 
 -- do this once on init, otherwise on restart this dows not work
-local binaries_folder = get_parent_dir(get_parent_dir(script_path())) .. 'binaries'
+local binaries_folder
+
+if is_win() then
+    binaries_folder = fn.stdpath('data')..'\\binaries'
+else
+    binaries_folder = get_parent_dir(get_parent_dir(script_path())) .. 'binaries'
+end
 
 -- locate the binary here, as expand is relative to the calling script name
 local function binary()
