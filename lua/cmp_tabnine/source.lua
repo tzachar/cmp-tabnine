@@ -17,8 +17,12 @@ local function json_decode(data)
 	end
 end
 
+local function is_win()
+  return fn.has('win64') == 1 or fn.has('win32') == 1
+end
+
 local function get_path_separator()
-    if ((fn.has('win64') == 1) or (fn.has('win32') == 1)) then return '\\' end
+    if is_win() then return '\\' end
     return '/'
 end
 
@@ -66,7 +70,10 @@ local function binary()
 	table.sort(versions, function (a, b) return a.version < b.version end)
 	local latest = versions[#versions]
 	if not latest then
-		vim.notify('cmp-tabnine: Cannot find installed TabNine. Please run install.sh')
+		vim.notify(string.format(
+		    'cmp-tabnine: Cannot find installed TabNine. Please run install.%s',
+		    (is_win() and 'ps1' or 'sh')
+		))
 		return
 	end
 
@@ -103,11 +110,9 @@ function Source.new()
 	return self
 end
 
-
 Source.is_available = function()
 	return (Source.job ~= 0)
 end
-
 
 Source.get_debug_name = function()
 	return 'TabNine'
