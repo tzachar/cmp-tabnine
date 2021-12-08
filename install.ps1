@@ -17,7 +17,7 @@ if(!(Test-Path ./binaries)){
 }
 
 if(!(Test-Path "./binaries/$path")){
-	mkdir "binaries/$path"
+	mkdir -p "binaries/$path"
 }
 
 expand-archive Tabnine.zip -destinationpath "./binaries/$path" -force
