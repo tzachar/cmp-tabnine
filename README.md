@@ -9,11 +9,12 @@ Using plug:
    ```
 
 Using plug on windows:
-
+	```viml
 	Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1'}
+	```
 
 Using [Packer](https://github.com/wbthomason/packer.nvim/):
-   ```viml
+   ```lua
 return require("packer").startup(
 	function(use)
 		use "hrsh7th/nvim-cmp" --completion
@@ -22,7 +23,7 @@ return require("packer").startup(
 )
    ```
 Using [Packer](https://github.com/wbthomason/packer.nvim/) on windows:
-   ```viml
+   ```lua
 return require("packer").startup(
 	function(use)
 		use "hrsh7th/nvim-cmp" --completion
@@ -85,7 +86,7 @@ For this to work properly, you need to setup snippet support for `nvim-cmp`.
 
 ## `ignored_file_types` `(table: <string:bool>)`
 Which file types to ignore. For example:
-```
+```lua
 ignored_file_types = {
 	html = true;
 }
