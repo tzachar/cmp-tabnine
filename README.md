@@ -9,9 +9,9 @@ Using plug:
    ```
 
 Using plug on windows:
-	```viml
-	Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1'}
-	```
+   ```viml
+   Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1' }
+   ```
 
 Using [Packer](https://github.com/wbthomason/packer.nvim/):
    ```lua
