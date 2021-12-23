@@ -158,7 +158,11 @@ Source._do_complete = function(ctx)
 	}
 
 	table.insert(Source.ctx_list, ctx)
-	fn.chansend(Source.job, fn.json_encode(req) .. "\n")
+	-- fn.chansend(Source.job, fn.json_encode(req) .. "\n")
+	-- if there is an error, e.g., the channel is dead, we expect on_exit will be
+	-- called in the future and restart the server
+	-- we use pcall as we do not want to spam the user with error messages
+	pcall(fn.chansend, Source.job, fn.json_encode(req) .. "\n")
 end
 
 --- complete
