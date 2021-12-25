@@ -97,11 +97,8 @@ local function binary()
 end
 
 local Source = {
-	callback = nil;
 	job = 0;
-	-- pass ctx message from do_complete to on_output
-	-- FIXME: It may lead to unmatch of ctx list because on_stdout may not be called
-	ctx_list = {};
+	pending = {}
 }
 
 function Source.new()
@@ -153,11 +150,11 @@ Source._do_complete = function(ctx)
 			region_includes_end = region_includes_end,
 			-- filename = fn["expand"]("%:p"),
 			filename = vim.uri_from_bufnr(0):gsub('file://', ''),
-			max_num_results = conf:get('max_num_results')
+			max_num_results = conf:get('max_num_results'),
+			correlation_id = ctx.context.id,
 		}
 	}
 
-	table.insert(Source.ctx_list, ctx)
 	-- fn.chansend(Source.job, fn.json_encode(req) .. "\n")
 	-- if there is an error, e.g., the channel is dead, we expect on_exit will be
 	-- called in the future and restart the server
@@ -171,7 +168,7 @@ function Source.complete(self, ctx, callback)
 		callback()
 		return
 	end
-	Source.callback = callback
+	Source.pending[ctx.context.id] = { ctx = ctx, callback = callback }
 	Source._do_complete(ctx)
 end
 
@@ -186,7 +183,7 @@ Source._on_exit = function(_, code)
 	if not bin then
 		return
 	end
-	Source.ctx_list = {}
+	Source.pending = {}
 	Source.job = fn.jobstart({bin, '--client=cmp.vim'}, {
 		on_stderr = nil;
 		on_exit = Source._on_exit;
@@ -208,17 +205,8 @@ Source._on_stdout = function(_, data, _)
       --   "user_message": [],
       --   "docs": []
       -- }
-	-- check that we have a context.
-	if #Source.ctx_list == 0 then
-		return
-	end
-	local items = {}
-	local old_prefix = ""
 	local show_strength = conf:get('show_prediction_strength')
 	local base_priority = conf:get('priority')
-
-	local ctx = table.remove(Source.ctx_list, 1)
-	local cursor = ctx.context.cursor
 
 	for _, jd in ipairs(data) do
 		if jd ~= nil and jd ~= '' then
@@ -229,8 +217,20 @@ Source._on_stdout = function(_, data, _)
 				-- fn.jobstop(Source.job)
 				dump('TabNine: json decode error: ', jd)
 			else
+				local id = response.correlation_id
+				if not Source.pending[id] then
+					return
+				end
+
+				local ctx = Source.pending[id].ctx
+				local callback = Source.pending[id].callback
+				Source.pending[id] = nil
+
+				local cursor = ctx.context.cursor
+
+				local items = {}
+				local old_prefix = response.old_prefix
 				local results = response.results
-				old_prefix = response.old_prefix
 
 				if results ~= nil then
 					for _, result in ipairs(results) do
@@ -301,31 +301,26 @@ Source._on_stdout = function(_, data, _)
 				else
 					dump('no results:', jd)
 				end
+
+				-- sort by returned importance b4 limiting number of results
+				table.sort(items, function(a, b)
+					if not a.priority then
+						return false
+					elseif not b.priority then
+						return true
+					else
+						return (a.priority > b.priority)
+					end
+				end)
+
+				items = {unpack(items, 1, conf:get('max_num_results'))}
+				callback({
+					items = items,
+					isIncomplete = conf:get('run_on_every_keystroke'),
+				})
 			end
 		end
 	end
-
-	-- sort by returned importance b4 limiting number of results
-	table.sort(items, function(a, b)
-		if not a.priority then
-			return false
-		elseif not b.priority then
-			return true
-		else
-			return (a.priority > b.priority)
-		end
-	end)
-
-	items = {unpack(items, 1, conf:get('max_num_results'))}
-	--
-	-- now, if we have a callback, send results
-	if Source.callback then
-		Source.callback({
-			items = items,
-			isIncomplete = conf:get('run_on_every_keystroke'),
-		})
-	end
-	Source.callback = nil;
 end
 
 return Source
