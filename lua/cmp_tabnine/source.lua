@@ -212,16 +212,14 @@ Source._on_stdout = function(_, data, _)
 		if jd ~= nil and jd ~= '' then
 			local response = json_decode(jd)
 			-- dump(response)
-			if response == nil then
+			local id = (response or {}).correlation_id
+			if Source.pending[id] == nil then
 				-- the _on_exit callback should restart the server
 				-- fn.jobstop(Source.job)
-				dump('TabNine: json decode error: ', jd)
-			else
-				local id = response.correlation_id
-				if not Source.pending[id] then
-					return
+				if response == nil then
+					dump('TabNine: json decode error: ', jd)
 				end
-
+			else
 				local ctx = Source.pending[id].ctx
 				local callback = Source.pending[id].callback
 				Source.pending[id] = nil
