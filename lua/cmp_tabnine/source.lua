@@ -59,6 +59,31 @@ end
 -- do this once on init, otherwise on restart this dows not work
 local binaries_folder = get_parent_dir(get_parent_dir(script_path())) .. 'binaries'
 
+-- this function is taken from https://github.com/yasuoka/stralnumcmp/blob/master/stralnumcmp.lua
+local function stralnumcmp(a, b)
+	local a0, b0, an, bn, as, bs, c
+	a0 = a
+	b0 = b
+	while (a:len() > 0 and b:len() > 0) do
+		an = a:match('^%d+')
+		bn = b:match('^%d+')
+		as = an or a:match('^%D+')
+		bs = bn or b:match('^%D+')
+
+		if (an and bn) then
+			c = tonumber(an) - tonumber(bn)
+		else
+			c = (as < bs) and -1 or ((as > bs) and 1 or 0)
+		end
+		if (c ~= 0) then
+			return c
+		end
+		a = a:sub((an and an:len() or as:len()) + 1)
+		b = b:sub((bn and bn:len() or bs:len()) + 1)
+	end
+	return (a0:len() - b0:len())
+end
+
 -- locate the binary here, as expand is relative to the calling script name
 local function binary()
 	local versions_folders = fn.globpath(binaries_folder, '*', false, true)
@@ -70,7 +95,7 @@ local function binary()
 			end
 		end
 	end
-	table.sort(versions, function (a, b) return a.version < b.version end)
+	table.sort(versions, function (a, b) return stralnumcmp(a.version, b.version) < 0 end)
 	local latest = versions[#versions]
 	if not latest then
 		vim.notify(string.format('cmp-tabnine: Cannot find installed TabNine. Please run install.%s', (is_win() and 'ps1' or 'sh')))
