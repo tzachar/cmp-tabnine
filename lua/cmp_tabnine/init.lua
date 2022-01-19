@@ -5,7 +5,9 @@ local M = {}
 
 M.setup = function()
   vim.schedule(function()
-    cmp.register_source('cmp_tabnine', source.new())
+    tabnine_source = source.new()
+    cmp.register_source('cmp_tabnine', tabnine_source)
+    vim.cmd [[command! CmpTabnineHub lua tabnine_source.open_tabnine_hub()]]
   end)
 end
 
