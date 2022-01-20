@@ -1,5 +1,5 @@
 # cmp-tabnine
-TabNine source for [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
+Tabnine source for [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
 
 # Install
 
@@ -59,6 +59,10 @@ tabnine:setup({
 	};
 })
 ```
+
+# Log in to your account
+
+On [Tabnine Hub](#commands)
 
 ## `max_lines`
 
@@ -157,3 +161,8 @@ cmp.setup({
   },
 }
 ```
+
+# Commands 
+
+- `:CmpTabnineHub`: Open Tabnine Hub
+

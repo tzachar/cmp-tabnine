@@ -136,24 +136,17 @@ function Source.new()
   return self
 end
 
-
-Source.open_tabnine_hub = function()
+Source.open_tabnine_hub = function(self)
   local req = {}
   req.version = '3.3.0'
   req.request = {
     Configuration = {
-      quiet = false
+      quiet = false,
     },
   }
 
-  local bin = binary()
-  if not bin then
-    return
-  end
-
-  local hub = fn.jobstart({ bin, '--client=cmp.vim' })
-
-  pcall(fn.chansend, hub, fn.json_encode(req) .. '\n')
+  -- pcall(fn.chansend, hub, fn.json_encode(req) .. '\n')
+  pcall(fn.chansend, self.job, fn.json_encode(req) .. '\n')
 end
 
 Source.is_available = function()
