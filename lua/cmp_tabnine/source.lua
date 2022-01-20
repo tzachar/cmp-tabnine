@@ -145,7 +145,10 @@ Source.open_tabnine_hub = function(self)
     },
   }
 
-  -- pcall(fn.chansend, hub, fn.json_encode(req) .. '\n')
+  if self == nil then
+    -- this happens when nvim < 0.7 and vim.api.nvim_add_user_command does not exist
+    self = Source
+  end
   pcall(fn.chansend, self.job, fn.json_encode(req) .. '\n')
 end
 
