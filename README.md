@@ -60,7 +60,7 @@ tabnine:setup({
 })
 ```
 
-## Log in to your account
+## Configure Tabnine or Log in to Your Account
 
 On [Tabnine Hub](#commands)
 
