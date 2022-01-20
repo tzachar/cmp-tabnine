@@ -5,7 +5,11 @@ local M = {}
 
 M.setup = function()
   vim.schedule(function()
-    cmp.register_source('cmp_tabnine', source.new())
+    local tabnine_source = source.new()
+    cmp.register_source('cmp_tabnine', tabnine_source)
+    vim.api.nvim_add_user_command('CmpTabnineHub', function()
+      tabnine_source:open_tabnine_hub()
+    end, { force = true })
   end)
 end
 

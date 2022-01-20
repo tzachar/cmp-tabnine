@@ -136,6 +136,19 @@ function Source.new()
   return self
 end
 
+Source.open_tabnine_hub = function(self)
+  local req = {}
+  req.version = '3.3.0'
+  req.request = {
+    Configuration = {
+      quiet = false,
+    },
+  }
+
+  -- pcall(fn.chansend, hub, fn.json_encode(req) .. '\n')
+  pcall(fn.chansend, self.job, fn.json_encode(req) .. '\n')
+end
+
 Source.is_available = function()
   return (Source.job ~= 0)
 end
