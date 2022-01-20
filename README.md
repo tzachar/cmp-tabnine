@@ -60,7 +60,7 @@ tabnine:setup({
 })
 ```
 
-# Log in to your account
+## Log in to your account
 
 On [Tabnine Hub](#commands)
 
@@ -164,5 +164,5 @@ cmp.setup({
 
 # Commands 
 
-- `:CmpTabnineHub`: Open Tabnine Hub
+- `:CmpTabnineHub` Open Tabnine Hub
 
