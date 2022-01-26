@@ -286,16 +286,19 @@ Source._on_stdout = function(_, data, _)
               old_suffix = string.sub(old_suffix, 1, -2)
             end
 
+            local range = {
+              start = { line = cursor.line, character = cursor.col - #old_prefix - 1 },
+              ['end'] = { line = cursor.line, character = cursor.col + #old_suffix - 1 },
+            }
+
             local item = {
               label = newText,
               filterText = newText,
               data = result,
               textEdit = {
-                range = {
-                  start = { line = cursor.line, character = cursor.col - #old_prefix - 1 },
-                  ['end'] = { line = cursor.line, character = cursor.col + #old_suffix - 1 },
-                },
                 newText = newText,
+                insert = range, -- May be better to exclude the trailing part of old_suffix since it's 'replaced'?
+                replace = range,
               },
               sortText = newText,
               dup = 0,
