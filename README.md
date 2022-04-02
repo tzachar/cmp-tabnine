@@ -57,6 +57,7 @@ tabnine:setup({
 		-- uncomment to ignore in lua:
 		-- lua = true
 	};
+	show_prediction_strength = false;
 })
 ```
 
@@ -97,8 +98,13 @@ ignored_file_types = {
 ```
 will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
 
+## `show_prediction_strength`
 
-# Pretty Printing Menu Items 
+When `show_prediction_strength` is true, `cmp-tabnine` will display
+the prediction strength as a percentage by assigning `entry.completion_item.data.detail`.
+This was previously the default behavior.
+
+# Pretty Printing Menu Items
 
 You can use the following to pretty print the completion menu (requires
 [lspkind](https://github.com/onsails/lspkind-nvim) and patched fonts

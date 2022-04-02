@@ -319,9 +319,11 @@ Source._on_stdout = function(_, data, _)
               local percent = tonumber(string.sub(result.detail, 0, -2))
               if percent ~= nil then
                 item['priority'] = base_priority + percent * 0.001
-                item['labelDetails'] = {
-                  detail = result.detail,
-                }
+                if show_strength then
+                    item['labelDetails'] = {
+                      detail = result.detail,
+                    }
+                end
                 item['sortText'] = string.format('%02d', 100 - percent) .. item['sortText']
               else
                 item['detail'] = result.detail
