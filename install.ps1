@@ -1,4 +1,4 @@
-$version = iwr https://update.tabnine.com/bundles/version
+$version = iwr https://update.tabnine.com/bundles/version -UseBasicParsing
 $version = $version.content
 
 if([environment]::Is64bitOperatingSystem){
