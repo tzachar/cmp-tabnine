@@ -107,7 +107,7 @@ local function binary()
   end
 
   local platform = nil
-  local arch, _ = string.gsub(fn.system('uname -m'), '\n$', '')
+  local arch, _ = string.gsub(fn.system({'uname',  '-m'}), '\n$', '')
 
   if fn.has('win64') == 1 then
     platform = 'x86_64-pc-windows-gnu'
