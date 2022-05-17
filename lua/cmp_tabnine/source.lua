@@ -107,20 +107,22 @@ local function binary()
   end
 
   local platform = nil
-  local arch, _ = string.gsub(fn.system({'uname',  '-m'}), '\n$', '')
 
   if fn.has('win64') == 1 then
     platform = 'x86_64-pc-windows-gnu'
   elseif fn.has('win32') == 1 then
     platform = 'i686-pc-windows-gnu'
-  elseif fn.has('mac') == 1 then
-    if arch == 'arm64' then
-      platform = 'aarch64-apple-darwin'
-    else
-      platform = arch .. '-apple-darwin'
+  else
+    local arch, _ = string.gsub(fn.system({'uname',  '-m'}), '\n$', '')
+    if fn.has('mac') == 1 then
+      if arch == 'arm64' then
+        platform = 'aarch64-apple-darwin'
+      else
+        platform = arch .. '-apple-darwin'
+      end
+    elseif fn.has('unix') == 1 then
+      platform = arch .. '-unknown-linux-musl'
     end
-  elseif fn.has('unix') == 1 then
-    platform = arch .. '-unknown-linux-musl'
   end
   return latest.path .. '/' .. platform .. '/' .. 'TabNine'
 end
