@@ -118,7 +118,7 @@ local function binary()
       if arch == 'arm64' then
         platform = 'aarch64-apple-darwin'
       else
-        platform = arch .. '-apple-darwin'
+        platform = 'x86_64-apple-darwin'
       end
     elseif fn.has('unix') == 1 then
       platform = arch .. '-unknown-linux-musl'
