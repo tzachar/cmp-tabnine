@@ -3,6 +3,14 @@ Tabnine source for [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
 
 # Install
 
+## Dependencies
+
+On Linux and Mac, you will need `curl` and `unzip` in your `$PATH`.
+
+On windows, you just need powershell.
+
+## Using a plugin manager
+
 Using plug:
    ```viml
    Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
