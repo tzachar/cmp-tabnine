@@ -202,7 +202,7 @@ cmp.setup({
       compare.order,
     },
   },
-}
+})
 ```
 
 # Commands 
