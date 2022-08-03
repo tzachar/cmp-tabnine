@@ -267,6 +267,8 @@ Source._on_stdout = function(_, data, _)
         -- fn.jobstop(Source.job)
         if response == nil then
           dump('TabNine: json decode error: ', jd)
+        elseif response.status =='Failure' then
+          dump('TabNine: received error: ', response.message.reason)
         end
       else
         local ctx = Source.pending[id].ctx
