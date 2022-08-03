@@ -210,4 +210,5 @@ cmp.setup({
 # Commands 
 
 - `:CmpTabnineHub` Open Tabnine Hub
+- `:CmpTabnineHubUrl` Show the link to Tanine Hub
 

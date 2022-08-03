@@ -130,20 +130,23 @@ end
 local Source = {
   job = 0,
   pending = {},
+  -- cache the hub url. Set every time on_exit is called, assuming it wont
+  -- change till next run of the tabnine process
+  hub_url = 'Unknown',
 }
 
 function Source.new()
   local self = setmetatable({}, { __index = Source })
-  self._on_exit(0, 0)
+  self._on_exit(Source, 0)
   return self
 end
 
-Source.open_tabnine_hub = function(self)
+Source.open_tabnine_hub = function(self, quiet)
   local req = {}
   req.version = '3.3.0'
   req.request = {
     Configuration = {
-      quiet = false,
+      quiet = quiet,
     },
   }
 
@@ -221,7 +224,7 @@ function Source.complete(self, ctx, callback)
   Source._do_complete(ctx)
 end
 
-Source._on_exit = function(_, code)
+Source._on_exit = function(self, code)
   -- restart..
   if code == 143 then
     -- nvim is exiting. do not restart
@@ -238,6 +241,9 @@ Source._on_exit = function(_, code)
     on_exit = Source._on_exit,
     on_stdout = Source._on_stdout,
   })
+
+  -- fire off a hub request to get the url
+  self:open_tabnine_hub(true)
 end
 
 Source._on_stdout = function(_, data, _)
@@ -260,14 +266,13 @@ Source._on_stdout = function(_, data, _)
   for _, jd in ipairs(data) do
     if jd ~= nil and jd ~= '' then
       local response = json_decode(jd)
-      -- dump(response)
       local id = (response or {}).correlation_id
-      if Source.pending[id] == nil then
-        -- the _on_exit callback should restart the server
-        -- fn.jobstop(Source.job)
-        if response == nil then
-          dump('TabNine: json decode error: ', jd)
-        end
+      if response == nil then
+        dump('TabNine: json decode error: ', jd)
+      elseif (response.message or ''):gmatch('http://127.0.0.1') then
+        Source.hub_url = response.message:match('.*(http://127.0.0.1.*)')
+      elseif Source.pending[id] == nil then
+        dump('TabNine: unknown message: ', jd)
       else
         local ctx = Source.pending[id].ctx
         local callback = Source.pending[id].callback
