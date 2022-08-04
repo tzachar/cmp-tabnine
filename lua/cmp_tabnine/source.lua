@@ -271,6 +271,8 @@ Source._on_stdout = function(_, data, _)
         dump('TabNine: json decode error: ', jd)
       elseif (response.message or ''):find('http://127.0.0.1') then
         Source.hub_url = response.message:match('.*(http://127.0.0.1.*)')
+      elseif id == nil then
+          -- ignore this message
       elseif Source.pending[id] == nil then
         dump('TabNine: unknown message: ', jd)
       else
