@@ -269,7 +269,7 @@ Source._on_stdout = function(_, data, _)
       local id = (response or {}).correlation_id
       if response == nil then
         dump('TabNine: json decode error: ', jd)
-      elseif (response.message or ''):gmatch('http://127.0.0.1') then
+      elseif (response.message or ''):find('http://127.0.0.1') then
         Source.hub_url = response.message:match('.*(http://127.0.0.1.*)')
       elseif Source.pending[id] == nil then
         dump('TabNine: unknown message: ', jd)
