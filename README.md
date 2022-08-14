@@ -50,6 +50,8 @@ require'cmp'.setup {
 	},
 }
    ```
+## Using NvChad
+see [this issue](https://github.com/tzachar/cmp-tabnine/issues/47)
 
 # Setup
 
