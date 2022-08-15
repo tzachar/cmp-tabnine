@@ -15,7 +15,7 @@ local conf_defaults = {
 }
 
 function M:setup(params)
-  for k, v in pairs(params) do
+  for k, v in pairs(params or {}) do
     conf_defaults[k] = v
   end
 end
