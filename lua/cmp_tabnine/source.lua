@@ -244,7 +244,7 @@ Source._on_exit = function(self, code)
   })
 
   -- fire off a hub request to get the url
-  self:open_tabnine_hub(true)
+  Source:open_tabnine_hub(true)
 end
 
 Source._on_stdout = function(_, data, _)
