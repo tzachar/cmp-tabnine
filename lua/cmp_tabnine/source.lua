@@ -113,15 +113,14 @@ local function binary()
   elseif fn.has('win32') == 1 then
     platform = 'i686-pc-windows-gnu'
   else
+    local arch, _ = string.gsub(fn.system({'uname',  '-m'}), '\n$', '')
     if fn.has('mac') == 1 then
-      local arch, _ = string.gsub(fn.system({'arch'}), '\n$', '')
       if arch == 'arm64' then
         platform = 'aarch64-apple-darwin'
       else
         platform = 'x86_64-apple-darwin'
       end
     elseif fn.has('unix') == 1 then
-      local arch, _ = string.gsub(fn.system({'uname',  '-m'}), '\n$', '')
       platform = arch .. '-unknown-linux-musl'
     end
   end

@@ -10,10 +10,10 @@ version=${version:-$(curl -sS https://update.tabnine.com/bundles/version)}
 
 case $(uname -s) in
 "Darwin")
-    if [ "$(arch)" == "arm64" ]; then
+    if [ "$(uname -m)" == "arm64" ]; then
         platform="aarch64-apple-darwin"
     else
-        platform="$(arch)-apple-darwin"
+        platform="$(uname -m)-apple-darwin"
     fi
     ;;
 "Linux")
