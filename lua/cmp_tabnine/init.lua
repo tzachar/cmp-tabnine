@@ -7,16 +7,17 @@ M.setup = function()
   vim.schedule(function()
     local tabnine_source = source.new()
     cmp.register_source('cmp_tabnine', tabnine_source)
-    if vim.api.nvim_add_user_command ~= nil and false then
-      vim.api.nvim_add_user_command('CmpTabnineHub', function()
+    if vim.api.nvim_create_user_command ~= nil and false then
+      vim.api.nvim_create_user_command('CmpTabnineHub', function()
         tabnine_source:open_tabnine_hub(false)
       end, { force = true })
-      vim.api.nvim_add_user_command('CmpTabnineHubUrl', function()
-        vim.fn.message(tabnine_source.hub_url)
+      vim.api.nvim_create_user_command('CmpTabnineHubUrl', function()
+        vim.notify(tabnine_source:get_hub_url())
       end, { force = true })
     else
-      vim.cmd [[command! CmpTabnineHub lua require('cmp_tabnine.source'):open_tabnine_hub(false)]]
-      vim.cmd [[command! CmpTabnineHubUrl lua print(require('cmp_tabnine.source').hub_url)]]
+      -- set self to nil to use latest source
+      vim.cmd [[command! CmpTabnineHub lua require('cmp_tabnine.source').open_tabnine_hub(nil, false)]]
+      vim.cmd [[command! CmpTabnineHubUrl lua print(require('cmp_tabnine.source').get_hub_url(nil))]]
     end
   end)
 end
