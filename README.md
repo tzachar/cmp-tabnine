@@ -209,8 +209,35 @@ cmp.setup({
 })
 ```
 
-# Commands 
+# Prefetch
 
-- `:CmpTabnineHub` Open Tabnine Hub
-- `:CmpTabnineHubUrl` Show the link to Tanine Hub
+TabNine supports prefetching files, preprocessing them before users ask for
+completions. Prefetching is supported through a command:
+
+`:CmpTabninePrefetch file_path`
+
+and also directly using lua:
+
+```lua
+require('cmp_tabnine'):prefetch(file_path)
+```
+
+The lua api can be used to prefetch a project, or a file on open:
+
+```lua
+local prefetch = vim.api.nvim_create_augroup("prefetch", {clear = true})
+
+vim.api.nvim_create_autocmd('BufRead', {
+  group = prefetch,
+  pattern = '*.py',
+  callback = function()
+    require('cmp_tabnine'):prefetch(vim.fn.expand('%:p'))
+  end
+})
+```
+
+# More Commands 
+
+- `:CmpTabnineHub`: Open Tabnine Hub
+- `:CmpTabnineHubUrl`: Show the link to Tanine Hub
 

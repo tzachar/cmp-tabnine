@@ -223,6 +223,19 @@ function Source._do_complete(self, ctx)
   pcall(fn.chansend, self.job, fn.json_encode(req) .. '\n')
 end
 
+function Source.prefetch(self, file_path)
+  local req = {}
+  req.version = '3.3.0'
+  req.request = {
+    Prefetch = {
+      filename = file_path,
+      -- filename = vim.uri_from_bufnr(0):gsub('file://', ''),
+    },
+  }
+
+  pcall(fn.chansend, self.job, fn.json_encode(req) .. '\n')
+end
+
 --- complete
 function Source.complete(self, ctx, callback)
   if conf:get('ignored_file_types')[vim.bo.filetype] then
@@ -276,9 +289,9 @@ function Source.on_stdout(self, data)
   local base_priority = conf:get('priority')
 
   for _, jd in ipairs(data) do
-    if jd ~= nil and jd ~= '' then
-      local response = json_decode(jd)
-      local id = (response or {}).correlation_id
+    if jd ~= nil and jd ~= '' and jd ~= 'null' then
+      local response = (json_decode(jd) or {})
+      local id = response.correlation_id
       if response == nil then
         dump('TabNine: json decode error: ', jd)
       elseif (response.message or ''):find('http://127.0.0.1') then
