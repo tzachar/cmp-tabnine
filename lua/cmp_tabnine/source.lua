@@ -193,7 +193,7 @@ function Source._do_complete(self, ctx)
     region_includes_end = true
   end
 
-  local lines_before = api.nvim_buf_get_lines(0, cursor.line - max_lines, cursor.line - 1, false)
+  local lines_before = api.nvim_buf_get_lines(0, cursor.line - max_lines, cursor.line, false)
   table.insert(lines_before, cur_line_before)
   local before = table.concat(lines_before, '\n')
 
