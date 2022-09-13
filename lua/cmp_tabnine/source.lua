@@ -124,7 +124,7 @@ local function binary()
       platform = arch .. '-unknown-linux-musl'
     end
   end
-  return latest.path .. '/' .. platform .. '/' .. 'TabNine'
+  return latest.path .. '/' .. platform .. '/' .. 'TabNine', latest.version
 end
 
 local Source = {
@@ -152,7 +152,7 @@ end
 
 function Source.open_tabnine_hub(self, quiet)
   local req = {}
-  req.version = '3.3.0'
+  req.version = self.tabnine_version
   req.request = {
     Configuration = {
       quiet = quiet,
@@ -193,7 +193,12 @@ function Source._do_complete(self, ctx)
     region_includes_end = true
   end
 
-  local lines_before = api.nvim_buf_get_lines(0, cursor.line - max_lines, cursor.line, false)
+  local lines_before = api.nvim_buf_get_lines(
+    0,
+    math.max(0, cursor.line - max_lines),
+    cursor.line,
+    false
+  )
   table.insert(lines_before, cur_line_before)
   local before = table.concat(lines_before, '\n')
 
@@ -202,17 +207,20 @@ function Source._do_complete(self, ctx)
   local after = table.concat(lines_after, '\n')
 
   local req = {}
-  req.version = '3.3.0'
+  req.version = self.tabnine_version
   req.request = {
     Autocomplete = {
       before = before,
       after = after,
       region_includes_beginning = region_includes_beginning,
       region_includes_end = region_includes_end,
-      -- filename = fn["expand"]("%:p"),
       filename = vim.uri_from_bufnr(0):gsub('file://', ''),
       max_num_results = conf:get('max_num_results'),
       correlation_id = ctx.context.id,
+      line = cursor.line,
+      offset = #before + 1,
+      character = cursor.col,
+      indentation_size = 4,
     },
   }
 
@@ -225,7 +233,7 @@ end
 
 function Source.prefetch(self, file_path)
   local req = {}
-  req.version = '3.3.0'
+  req.version = self.tabnine_version
   req.request = {
     Prefetch = {
       filename = file_path,
@@ -256,10 +264,11 @@ function Source.on_exit(self, job, code)
     return
   end
 
-  local bin = binary()
+  local bin, version = binary()
   if not bin then
     return
   end
+  self.tabnine_version = version
   self.pending = {}
   self.job = fn.jobstart({ bin, '--client=cmp.vim' }, {
     on_stderr = nil,
@@ -297,7 +306,8 @@ function Source.on_stdout(self, data)
       elseif (response.message or ''):find('http://127.0.0.1') then
         self.hub_url = response.message:match('.*(http://127.0.0.1.*)')
       elseif id == nil then
-          -- ignore this message
+        -- dump('TabNine: No correlation id: ', jd)
+        -- ignore this message
       elseif self.pending[id] == nil then
         dump('TabNine: unknown message: ', jd)
       elseif self.pending[id].job ~= self.job then
@@ -349,6 +359,7 @@ function Source.on_stdout(self, data)
               item['insertTextFormat'] = cmp.lsp.InsertTextFormat.Snippet
               item['label'] = build_snippet(result.new_prefix, conf:get('snippet_placeholder'), result.new_suffix, false)
               item['textEdit'].newText = build_snippet(result.new_prefix, '$1', result.new_suffix, true)
+
             end
 
             if result.detail ~= nil then
@@ -365,12 +376,20 @@ function Source.on_stdout(self, data)
                 item['detail'] = result.detail
               end
             end
+
             if result.kind then
               item['kind'] = result.kind
             end
+
             if result.documentation then
               item['documentation'] = result.documentation
             end
+
+            if result.new_prefix:find('.*\n.*') then
+              item['data']['multiline'] = true
+              item['documentation'] = result.new_prefix
+            end
+
             if result.deprecated then
               item['deprecated'] = result.deprecated
             end
