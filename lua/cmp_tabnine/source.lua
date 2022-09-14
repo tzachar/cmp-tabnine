@@ -220,7 +220,7 @@ function Source._do_complete(self, ctx)
       line = cursor.line,
       offset = #before + 1,
       character = cursor.col,
-      indentation_size = 4,
+      indentation_size = (api.nvim_buf_get_option(0, 'tabstop') or 4),
     },
   }
 
