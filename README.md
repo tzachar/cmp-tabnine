@@ -75,7 +75,7 @@ tabnine.setup({
 
 ## Configure Tabnine or Log in to Your Account
 
-On [Tabnine Hub](#commands)
+On [Tabnine Hub](#More-Commands)
 
 ## `max_lines`
 
