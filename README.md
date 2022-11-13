@@ -58,7 +58,7 @@ see [this issue](https://github.com/tzachar/cmp-tabnine/issues/47)
 ```lua
 local tabnine = require('cmp_tabnine.config')
 
-tabnine.setup({
+tabnine:setup({
 	max_lines = 1000,
 	max_num_results = 20,
 	sort = true,
@@ -72,6 +72,8 @@ tabnine.setup({
 	show_prediction_strength = false
 })
 ```
+
+Please note the use of `:` instead of a `.`
 
 ## Configure Tabnine or Log in to Your Account
 
