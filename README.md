@@ -7,7 +7,14 @@ Tabnine source for [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
 
 On Linux and Mac, you will need `curl` and `unzip` in your `$PATH`.
 
-On windows, you just need powershell.
+On windows, you just need powershell. If you get a `PSSecurityException` while
+trying to install, try the following command in powershell:
+
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+For more information, see [about_Execution_Policies](https:/go.microsoft.com/fwlink/?LinkID=135170).
 
 ## Using a plugin manager
 
@@ -64,7 +71,7 @@ tabnine:setup({
 	sort = true,
 	run_on_every_keystroke = true,
 	snippet_placeholder = '..',
-	ignored_file_types = { 
+	ignored_file_types = {
 		-- default is not to ignore
 		-- uncomment to ignore in lua:
 		-- lua = true
@@ -225,7 +232,7 @@ and the entire suggestion to the `documentation` property of the entry, such
 that `cmp` will display the suggested lines in the documentation panel.
 
 
-# More Commands 
+# More Commands
 
 - `:CmpTabnineHub`: Open Tabnine Hub
 - `:CmpTabnineHubUrl`: Show the link to Tanine Hub
