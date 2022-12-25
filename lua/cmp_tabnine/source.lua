@@ -270,7 +270,12 @@ function Source.on_exit(self, job, code)
   end
   self.tabnine_version = version
   self.pending = {}
-  self.job = fn.jobstart({ bin, '--client=cmp.vim' }, {
+  self.job = fn.jobstart({
+    bin,
+    '--client', 'nvim',
+    '--client-metadata',
+    'pluginVersion=' .. version,
+  }, {
     on_stderr = nil,
     on_exit = function (j, c, _) self:on_exit(j, c) end,
     on_stdout = function (_, data, _) self:on_stdout(data) end,
@@ -327,6 +332,12 @@ function Source.on_stdout(self, data)
           for _, result in ipairs(results) do
             local newText = result.new_prefix .. result.new_suffix
 
+            if newText:find('.*\n.*') then
+              -- this is a multi line completion.
+              -- remove leading newlines
+              newText = newText:gsub('^\n', '')
+            end
+
             local old_suffix = result.old_suffix
             if string.sub(old_suffix, -1) == '\n' then
               old_suffix = string.sub(old_suffix, 1, -2)
@@ -339,7 +350,8 @@ function Source.on_stdout(self, data)
 
             local item = {
               label = newText,
-              filterText = newText,
+              -- removing filterText, as it interacts badly with multiline
+              -- filterText = newText,
               data = result,
               textEdit = {
                 newText = newText,
@@ -351,9 +363,10 @@ function Source.on_stdout(self, data)
             }
             -- This is a hack fix for cmp not displaying items of TabNine::config_dir, version, etc. because their
             -- completion items get scores of 0 in the matching algorithm
-            if #old_prefix == 0 then
-              item['filterText'] = string.sub(ctx.context.cursor_before_line, ctx.offset) .. newText
-            end
+            -- I don't think this is needed anymore
+            -- if #old_prefix == 0 then
+            --   item['filterText'] = string.sub(ctx.context.cursor_before_line, ctx.offset) .. newText
+            -- end
 
             if #result.new_suffix > 0 then
               item['insertTextFormat'] = cmp.lsp.InsertTextFormat.Snippet
@@ -382,12 +395,18 @@ function Source.on_stdout(self, data)
             end
 
             if result.documentation then
-              item['documentation'] = result.documentation
+              item['documentation'] = {
+                kind = cmp.lsp.MarkupKind.Markdown,
+                value = '```' .. (vim.filetype.match({ buf = 0 }) or '') .. '\n' .. result.documentation .. '\n```',
+              }
             end
 
             if result.new_prefix:find('.*\n.*') then
               item['data']['multiline'] = true
-              item['documentation'] = result.new_prefix
+              item['documentation'] = {
+                kind = cmp.lsp.MarkupKind.Markdown,
+                value = '```' .. (vim.filetype.match({ buf = 0 }) or '') .. '\n' .. newText .. '\n```',
+              }
             end
 
             if result.deprecated then

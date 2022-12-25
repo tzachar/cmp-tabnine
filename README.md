@@ -231,9 +231,12 @@ the `entry.completion_item.data.detail.multiline` flag to the completion entry
 and the entire suggestion to the `documentation` property of the entry, such
 that `cmp` will display the suggested lines in the documentation panel.
 
+To enable multi-line completions, you should (a) have a Pro account and (b)
+select either the hybrid or cloud completion models in the TabNine Hub.
+
+Support is also pending the resolution of [this issue](https://github.com/codota/tabnine-nvim/issues/6#issuecomment-1364655503).
 
 # More Commands
 
 - `:CmpTabnineHub`: Open Tabnine Hub
 - `:CmpTabnineHubUrl`: Show the link to Tanine Hub
-
