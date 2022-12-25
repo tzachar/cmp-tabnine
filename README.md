@@ -234,6 +234,10 @@ that `cmp` will display the suggested lines in the documentation panel.
 To enable multi-line completions, you should (a) have a Pro account and (b)
 select either the hybrid or cloud completion models in the TabNine Hub.
 
+Moreover, TabNine tends to suggest multi-line completions only on a new line
+(usually after a comment describing what you are expecting to get). The easiest
+way to trigger the completion is by manually invoking cmp on a new line.
+
 Support is also pending the resolution of [this issue](https://github.com/codota/tabnine-nvim/issues/6#issuecomment-1364655503).
 
 # More Commands
