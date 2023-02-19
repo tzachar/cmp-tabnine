@@ -113,7 +113,7 @@ local function binary()
   elseif fn.has('win32') == 1 then
     platform = 'i686-pc-windows-gnu'
   else
-    local arch, _ = string.gsub(fn.system({'uname',  '-m'}), '\n$', '')
+    local arch, _ = string.gsub(fn.system({ 'uname', '-m' }), '\n$', '')
     if fn.has('mac') == 1 then
       if arch == 'arm64' then
         platform = 'aarch64-apple-darwin'
@@ -193,12 +193,7 @@ function Source._do_complete(self, ctx)
     region_includes_end = true
   end
 
-  local lines_before = api.nvim_buf_get_lines(
-    0,
-    math.max(0, cursor.line - max_lines),
-    cursor.line,
-    false
-  )
+  local lines_before = api.nvim_buf_get_lines(0, math.max(0, cursor.line - max_lines), cursor.line, false)
   table.insert(lines_before, cur_line_before)
   local before = table.concat(lines_before, '\n')
 
@@ -272,13 +267,18 @@ function Source.on_exit(self, job, code)
   self.pending = {}
   self.job = fn.jobstart({
     bin,
-    '--client', 'nvim',
+    '--client',
+    'nvim',
     '--client-metadata',
     'pluginVersion=' .. version,
   }, {
     on_stderr = nil,
-    on_exit = function (j, c, _) self:on_exit(j, c) end,
-    on_stdout = function (_, data, _) self:on_stdout(data) end,
+    on_exit = function(j, c, _)
+      self:on_exit(j, c)
+    end,
+    on_stdout = function(_, data, _)
+      self:on_stdout(data)
+    end,
   })
 
   -- fire off a hub request to get the url
@@ -372,7 +372,6 @@ function Source.on_stdout(self, data)
               item['insertTextFormat'] = cmp.lsp.InsertTextFormat.Snippet
               item['label'] = build_snippet(result.new_prefix, conf:get('snippet_placeholder'), result.new_suffix, false)
               item['textEdit'].newText = build_snippet(result.new_prefix, '$1', result.new_suffix, true)
-
             end
 
             if result.detail ~= nil then
@@ -380,9 +379,9 @@ function Source.on_stdout(self, data)
               if percent ~= nil then
                 item['priority'] = base_priority + percent * 0.001
                 if show_strength then
-                    item['labelDetails'] = {
-                      detail = result.detail,
-                    }
+                  item['labelDetails'] = {
+                    detail = result.detail,
+                  }
                 end
                 item['sortText'] = string.format('%02d', 100 - percent) .. item['sortText']
               else

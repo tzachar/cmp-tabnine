@@ -34,9 +34,9 @@ M.setup = function()
       end, { force = true, nargs = 1, complete = 'file' })
     else
       -- set self to nil to use latest source
-      vim.cmd [[command! CmpTabnineHub lua require('cmp_tabnine.source').open_tabnine_hub(nil, false)]]
-      vim.cmd [[command! CmpTabnineHubUrl lua print(require('cmp_tabnine.source').get_hub_url(nil))]]
-      vim.cmd [[command! -nargs=1 -complete=file CmpTabninePrefetch lua require('cmp_tabnine'):prefetch(<q-args>)]]
+      vim.cmd([[command! CmpTabnineHub lua require('cmp_tabnine.source').open_tabnine_hub(nil, false)]])
+      vim.cmd([[command! CmpTabnineHubUrl lua print(require('cmp_tabnine.source').get_hub_url(nil))]])
+      vim.cmd([[command! -nargs=1 -complete=file CmpTabninePrefetch lua require('cmp_tabnine'):prefetch(<q-args>)]])
     end
   end)
 end
