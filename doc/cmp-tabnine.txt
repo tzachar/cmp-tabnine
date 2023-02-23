@@ -55,6 +55,10 @@ Using plug:`viml Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }`
 Using plug on windows:`viml Plug 'tzachar/cmp-tabnine', { 'do': 'powershell
 ./install.ps1' }`
 
+Using Lazy <https://github.com/folke/lazy.nvim/>:`lua return
+require("lazy").setup({ { 'tzachar/cmp-tabnine', build = './install.sh',
+dependencies = 'hrsh7th/nvim-cmp', }})`
+
 Using Packer <https://github.com/wbthomason/packer.nvim/>:`lua return
 require("packer").startup( function(use) use "hrsh7th/nvim-cmp" --completion
 use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
