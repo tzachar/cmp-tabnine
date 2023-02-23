@@ -28,6 +28,16 @@ Using plug on windows:
    Plug 'tzachar/cmp-tabnine', { 'do': 'powershell ./install.ps1' }
    ```
 
+Using [Lazy](https://github.com/folke/lazy.nvim/):
+   ```lua
+return require("lazy").setup({
+    {
+        'tzachar/cmp-tabnine',
+        build = './install.sh',
+        dependencies = 'hrsh7th/nvim-cmp',
+    }})
+   ```
+
 Using [Packer](https://github.com/wbthomason/packer.nvim/):
    ```lua
 return require("packer").startup(
