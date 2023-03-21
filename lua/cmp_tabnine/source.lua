@@ -360,6 +360,9 @@ function Source.on_stdout(self, data)
               },
               sortText = newText,
               dup = 0,
+              cmp = {
+              			kind_text = "TabNine",
+              },
             }
             -- This is a hack fix for cmp not displaying items of TabNine::config_dir, version, etc. because their
             -- completion items get scores of 0 in the matching algorithm
