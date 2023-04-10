@@ -88,6 +88,11 @@ end
 
 -- locate the binary here, as expand is relative to the calling script name
 local function binary()
+  local b = conf:get('binary')
+  if b and b.path and b.version then
+    return b.path, b.version
+  end
+
   local versions_folders = fn.globpath(binaries_folder, '*', false, true)
   local versions = {}
   for _, path in ipairs(versions_folders) do

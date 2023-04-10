@@ -12,6 +12,11 @@ local conf_defaults = {
     -- uncomment to ignore in lua:
     -- lua = true
   },
+  binary = { -- default is to use binary managed by plugin
+    -- uncomment to use cusom binary
+    -- path = "/my/custom/TabNine",
+    -- version = "4.4.265"
+  },
 }
 
 function M:setup(params)

@@ -86,7 +86,12 @@ tabnine:setup({
 		-- uncomment to ignore in lua:
 		-- lua = true
 	},
-	show_prediction_strength = false
+	show_prediction_strength = false,
+        binary = { -- default is to use binary managed by plugin
+		-- uncomment to use cusom binary
+		-- path = "/my/custom/TabNine",
+		-- version = "4.4.265"
+        },
 })
 ```
 
@@ -134,6 +139,19 @@ will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
 When `show_prediction_strength` is true, `cmp-tabnine` will display
 the prediction strength as a percentage by assigning `entry.completion_item.data.detail`.
 This was previously the default behavior.
+
+## `binary` `(table: <string:string>)`
+
+A custom path/version for the TabNine binary. For example:
+
+```lua
+binary = {
+	path = "/my/custom/TabNine",
+	version = "4.4.265",
+}
+```
+
+will make `cmp-tabnine` use a manually installed binary.
 
 # Pretty Printing Menu Items
 
