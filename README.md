@@ -132,7 +132,7 @@ will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
 ## `show_prediction_strength`
 
 When `show_prediction_strength` is true, `cmp-tabnine` will display
-the prediction strength as a percentage by assigning `entry.completion_item.data.detail`.
+the prediction strength as a percentage by assigning `entry.completion_item.data.completion_metadata.detail`.
 This was previously the default behavior.
 
 # Pretty Printing Menu Items
