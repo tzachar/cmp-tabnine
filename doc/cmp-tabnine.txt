@@ -16,7 +16,6 @@ Table of Contents                              *cmp-tabnine-table-of-contents*
   - run_on_every_keystroke          |cmp-tabnine-setup-run_on_every_keystroke|
   - snippet_placeholder                |cmp-tabnine-setup-snippet_placeholder|
   - ignored_file_types (table: <string:bool>)|cmp-tabnine-setup-ignored_file_types-(table:-<string:bool>)|
-  - show_prediction_strength      |cmp-tabnine-setup-show_prediction_strength|
 4. Pretty Printing Menu Items         |cmp-tabnine-pretty-printing-menu-items|
 5. Sorting                                               |cmp-tabnine-sorting|
 6. Prefetch                                             |cmp-tabnine-prefetch|
@@ -154,13 +153,6 @@ Which file types to ignore. For example:
 will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
 
 
-SHOW_PREDICTION_STRENGTH          *cmp-tabnine-setup-show_prediction_strength*
-
-When `show_prediction_strength` is true, `cmp-tabnine` will displaythe
-prediction strength as a percentage by assigning
-`entry.completion_item.data.detail`.This was previously the default behavior.
-
-
 ==============================================================================
 4. Pretty Printing Menu Items         *cmp-tabnine-pretty-printing-menu-items*
 
@@ -190,7 +182,7 @@ fonts(https://www.nerdfonts.com)):
                 vim_item.kind = lspkind.symbolic(vim_item.kind, {mode = "symbol"})
                 vim_item.menu = source_mapping[entry.source.name]
                 if entry.source.name == "cmp_tabnine" then
-                    local detail = (entry.completion_item.data or {}).detail
+                    local detail = (entry.completion_item.labelDetails or {}).detail
                     vim_item.kind = ""
                     if detail and detail:find('.*%%.*') then
                         vim_item.kind = vim_item.kind .. ' ' .. detail

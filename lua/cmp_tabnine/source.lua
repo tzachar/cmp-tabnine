@@ -377,7 +377,7 @@ function Source.on_stdout(self, data)
             end
 
             item['labelDetails'] = {
-              detail = (result.completion_metadata or {}).detail or nil
+              detail = (result.completion_metadata or {}).detail or nil,
             }
             if result.completion_metadata ~= nil then
               local percent = tonumber(string.sub(result.completion_metadata.detail, 0, -2))
