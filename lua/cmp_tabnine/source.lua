@@ -299,7 +299,6 @@ function Source.on_stdout(self, data)
   --   "user_message": [],
   --   "docs": []
   -- }
-  local show_strength = conf:get('show_prediction_strength')
   local base_priority = conf:get('priority')
 
   for _, jd in ipairs(data) do
@@ -377,18 +376,14 @@ function Source.on_stdout(self, data)
               item['textEdit'].newText = build_snippet(result.new_prefix, '$1', result.new_suffix, true)
             end
 
-            if result.detail ~= nil then
-              local percent = tonumber(string.sub(result.detail, 0, -2))
+            item['labelDetails'] = {
+              detail = (result.completion_metadata or {}).detail or nil
+            }
+            if result.completion_metadata ~= nil then
+              local percent = tonumber(string.sub(result.completion_metadata.detail, 0, -2))
               if percent ~= nil then
                 item['priority'] = base_priority + percent * 0.001
-                if show_strength then
-                  item['labelDetails'] = {
-                    detail = result.detail,
-                  }
-                end
                 item['sortText'] = string.format('%02d', 100 - percent) .. item['sortText']
-              else
-                item['detail'] = result.detail
               end
             end
 
