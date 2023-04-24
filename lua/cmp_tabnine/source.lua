@@ -174,7 +174,6 @@ function Source.get_debug_name()
   return 'TabNine'
 end
 
-
 ---Safe version of vim.str_utfindex
 ---Copied from cmp
 ---@param text string
@@ -184,7 +183,6 @@ local function to_utfindex(text, vimindex)
   vimindex = vimindex or #text + 1
   return vim.str_utfindex(text, math.max(0, math.min(vimindex - 1, #text)))
 end
-
 
 function Source._do_complete(self, ctx)
   if self.job == 0 then
