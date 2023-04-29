@@ -174,16 +174,6 @@ function Source.get_debug_name()
   return 'TabNine'
 end
 
----Safe version of vim.str_utfindex
----Copied from cmp
----@param text string
----@param vimindex integer|nil
----@return integer
-local function to_utfindex(text, vimindex)
-  vimindex = vimindex or #text + 1
-  return vim.str_utfindex(text, math.max(0, math.min(vimindex - 1, #text)))
-end
-
 function Source._do_complete(self, ctx)
   if self.job == 0 then
     return
@@ -193,10 +183,21 @@ function Source._do_complete(self, ctx)
   local cur_line = ctx.context.cursor_line
   -- properly handle utf8
   -- local cur_line_before = string.sub(cur_line, 1, cursor.col - 1)
-  local cur_line_before = string.sub(cur_line, 1, to_utfindex(cur_line, cursor.col))
+  local cur_line_before = vim.fn.strpart(
+    cur_line,
+    0,
+    math.max(cursor.col - 2, 0),
+    true
+  )
+
   -- properly handle utf8
   -- local cur_line_after = string.sub(cur_line, cursor.col) -- include current character
-  local cur_line_after = string.sub(cur_line, to_utfindex(cur_line, cursor.col + 1)) -- include current character
+  local cur_line_after = vim.fn.strpart(
+    cur_line,
+    math.max(cursor.col - 1, 0),
+    vim.fn.strdisplaywidth(cur_line),
+    true
+  ) -- include current character
 
   local region_includes_beginning = false
   local region_includes_end = false
