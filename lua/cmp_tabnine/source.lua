@@ -183,7 +183,7 @@ function Source._do_complete(self, ctx)
   local cur_line = ctx.context.cursor_line
   -- properly handle utf8
   -- local cur_line_before = string.sub(cur_line, 1, cursor.col - 1)
-  local cur_line_before = vim.fn.strpart(cur_line, 0, math.max(cursor.col - 2, 0), true)
+  local cur_line_before = vim.fn.strpart(cur_line, 0, math.max(cursor.col - 1, 0), true)
 
   -- properly handle utf8
   -- local cur_line_after = string.sub(cur_line, cursor.col) -- include current character
