@@ -14,6 +14,10 @@ local conf_defaults = {
 }
 
 function M:setup(params)
+  if params == nil then
+    vim.api.nvim_err_writeln('Bad call to cmp_tabnine.config.setup; Make sure to use setup:(params) -- note the use of a colon (:)')
+    params = self or {}
+  end
   for k, v in pairs(params or {}) do
     conf_defaults[k] = v
   end
