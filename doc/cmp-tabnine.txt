@@ -17,10 +17,11 @@ Table of Contents                              *cmp-tabnine-table-of-contents*
   - snippet_placeholder                |cmp-tabnine-setup-snippet_placeholder|
   - ignored_file_types (table: <string:bool>)|cmp-tabnine-setup-ignored_file_types-(table:-<string:bool>)|
 4. Pretty Printing Menu Items         |cmp-tabnine-pretty-printing-menu-items|
-5. Sorting                                               |cmp-tabnine-sorting|
-6. Prefetch                                             |cmp-tabnine-prefetch|
-7. Multi-Line suggestions                 |cmp-tabnine-multi-line-suggestions|
-8. More Commands                                   |cmp-tabnine-more-commands|
+5. Customize cmp highlight group   |cmp-tabnine-customize-cmp-highlight-group|
+6. Sorting                                               |cmp-tabnine-sorting|
+7. Prefetch                                             |cmp-tabnine-prefetch|
+8. Multi-Line suggestions                 |cmp-tabnine-multi-line-suggestions|
+9. More Commands                                   |cmp-tabnine-more-commands|
 
 ==============================================================================
 1. cmp-tabnine                                       *cmp-tabnine-cmp-tabnine*
@@ -202,7 +203,17 @@ fonts(https://www.nerdfonts.com)):
 
 
 ==============================================================================
-5. Sorting                                               *cmp-tabnine-sorting*
+5. Customize cmp highlight group   *cmp-tabnine-customize-cmp-highlight-group*
+
+The highlight group is `CmpItemKindTabNine`, you can change it by:
+
+>lua
+    vim.api.nvim_set_hl(0, "CmpItemKindTabNine", {fg ="#6CC644"})
+<
+
+
+==============================================================================
+6. Sorting                                               *cmp-tabnine-sorting*
 
 `cmp-tabnine` adds a priority entry to each completion item,which can be used
 to override `cmp`’s default sorting order:
@@ -229,7 +240,7 @@ to override `cmp`’s default sorting order:
 
 
 ==============================================================================
-6. Prefetch                                             *cmp-tabnine-prefetch*
+7. Prefetch                                             *cmp-tabnine-prefetch*
 
 TabNine supports prefetching files, preprocessing them before users ask
 forcompletions. Prefetching is supported through a command:
@@ -258,7 +269,7 @@ The lua api can be used to prefetch a project, or a file on open:
 
 
 ==============================================================================
-7. Multi-Line suggestions                 *cmp-tabnine-multi-line-suggestions*
+8. Multi-Line suggestions                 *cmp-tabnine-multi-line-suggestions*
 
 TabNine supports multi-line suggestions in Pro mode. If a suggestions is
 multi-line, we addthe `entry.completion_item.data.detail.multiline` flag to the
@@ -279,7 +290,7 @@ ofTabNine (see this issue
 
 
 ==============================================================================
-8. More Commands                                   *cmp-tabnine-more-commands*
+9. More Commands                                   *cmp-tabnine-more-commands*
 
 
 - `:CmpTabnineHub`: Open Tabnine Hub
