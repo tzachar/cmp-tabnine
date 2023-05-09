@@ -366,6 +366,7 @@ function Source.on_stdout(self, data)
               dup = 0,
               cmp = {
                 kind_text = 'TabNine',
+                kind_hl_group = "CmpItemKindTabNine",
               },
             }
             -- This is a hack fix for cmp not displaying items of TabNine::config_dir, version, etc. because their
