@@ -175,6 +175,14 @@ require'cmp'.setup {
 }
 ```
 
+# Customize cmp highlight group
+
+The highlight group is `CmpItemKindTabNine`, you can change it by:
+
+```lua
+vim.api.nvim_set_hl(0, "CmpItemKindTabNine", {fg ="#6CC644"})
+```
+
 # Sorting
 
 `cmp-tabnine` adds a priority entry to each completion item,
