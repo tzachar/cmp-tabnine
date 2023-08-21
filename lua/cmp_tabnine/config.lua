@@ -5,6 +5,7 @@ local conf_defaults = {
   max_num_results = 20,
   sort = true,
   priority = 5000,
+  min_percent = 0,
   run_on_every_keystroke = true,
   snippet_placeholder = '..',
   ignored_file_types = { -- default is not to ignore
