@@ -87,7 +87,7 @@ tabnine:setup({
 		-- lua = true
 	},
 	show_prediction_strength = false,
-  min_percent = 0
+	min_percent = 0
 })
 ```
 
