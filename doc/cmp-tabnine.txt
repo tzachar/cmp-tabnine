@@ -153,6 +153,10 @@ Which file types to ignore. For example:
 
 will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
 
+MIN_PERCENT                                                  *cmp-tabnine-min_percent*
+
+Eliminate items with a percentage less than `min_percent`.
+
 
 ==============================================================================
 4. Pretty Printing Menu Items         *cmp-tabnine-pretty-printing-menu-items*
