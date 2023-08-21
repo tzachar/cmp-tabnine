@@ -86,7 +86,8 @@ tabnine:setup({
 		-- uncomment to ignore in lua:
 		-- lua = true
 	},
-	show_prediction_strength = false
+	show_prediction_strength = false,
+  min_percent = 0
 })
 ```
 
@@ -128,6 +129,10 @@ ignored_file_types = {
 }
 ```
 will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
+
+## `min_percent`
+
+Eliminate items with a percentage less than `min_percent`.
 
 # Pretty Printing Menu Items
 

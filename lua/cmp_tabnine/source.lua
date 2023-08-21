@@ -388,6 +388,9 @@ function Source.on_stdout(self, data)
             if result.completion_metadata ~= nil then
               local percent = tonumber(string.sub(result.completion_metadata.detail, 0, -2))
               if percent ~= nil then
+                if percent <= conf:get('min_percent') then
+                  goto continue
+                end
                 item['priority'] = base_priority + percent * 0.001
                 item['sortText'] = string.format('%02d', 100 - percent) .. item['sortText']
               end
@@ -417,6 +420,7 @@ function Source.on_stdout(self, data)
             end
             table.insert(items, item)
           end
+          ::continue::
         else
           dump('no results:', jd)
         end
