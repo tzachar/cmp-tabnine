@@ -256,4 +256,4 @@ TabNine (see [this issue](https://github.com/codota/tabnine-nvim/issues/6#issuec
 # More Commands
 
 - `:CmpTabnineHub`: Open Tabnine Hub
-- `:CmpTabnineHubUrl`: Show the link to Tanine Hub
+- `:CmpTabnineHubUrl`: Show the link to Tabnine Hub
