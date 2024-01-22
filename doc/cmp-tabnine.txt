@@ -16,6 +16,7 @@ Table of Contents                              *cmp-tabnine-table-of-contents*
   - run_on_every_keystroke          |cmp-tabnine-setup-run_on_every_keystroke|
   - snippet_placeholder                |cmp-tabnine-setup-snippet_placeholder|
   - ignored_file_types (table: <string:bool>)|cmp-tabnine-setup-ignored_file_types-(table:-<string:bool>)|
+  - min_percent                                |cmp-tabnine-setup-min_percent|
 4. Pretty Printing Menu Items         |cmp-tabnine-pretty-printing-menu-items|
 5. Customize cmp highlight group   |cmp-tabnine-customize-cmp-highlight-group|
 6. Sorting                                               |cmp-tabnine-sorting|
@@ -100,7 +101,8 @@ see this issue <https://github.com/tzachar/cmp-tabnine/issues/47>
             -- uncomment to ignore in lua:
             -- lua = true
         },
-        show_prediction_strength = false
+        show_prediction_strength = false,
+        min_percent = 0
     })
 <
 
@@ -153,7 +155,8 @@ Which file types to ignore. For example:
 
 will make `cmp-tabnine` not offer completions when `vim.bo.filetype` is `html`.
 
-MIN_PERCENT                                                  *cmp-tabnine-min_percent*
+
+MIN_PERCENT                                    *cmp-tabnine-setup-min_percent*
 
 Eliminate items with a percentage less than `min_percent`.
 
