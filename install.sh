@@ -19,13 +19,19 @@ case $(uname -s) in
 "Linux")
     platform="$(uname -m)-unknown-linux-musl"
     ;;
+*"MINGW64"*)
+	platform="$(uname -m)-pc-windows-gnu"
+    ;;
 esac
 
 # we want the binary to reside inside our plugin's dir
-cd $(dirname $0)
-path=$version/$platform
+cd "$(dirname "$0")"
+path="${version}/${platform}"
 
-curl https://update.tabnine.com/bundles/${path}/TabNine.zip --create-dirs -o binaries/${path}/TabNine.zip
-unzip -o binaries/${path}/TabNine.zip -d binaries/${path}
-rm -rf binaries/${path}/TabNine.zip
-chmod +x binaries/$path/*
+curl "https://update.tabnine.com/bundles/${path}/TabNine.zip" --create-dirs -o "binaries/${path}/TabNine.zip"
+unzip -o "binaries/${path}/TabNine.zip" -d "binaries/${path}"
+rm -rf "binaries/${path}/TabNine.zip"
+
+if [[ "$(uname -s)" != *"MINGW64"* ]]; then
+    chmod +x "binaries/$path/"*
+fi
