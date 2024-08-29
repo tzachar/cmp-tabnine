@@ -171,11 +171,11 @@ function Source.is_available(self)
 end
 
 function Source.get_trigger_characters()
-  return { "*" }
+  return { '*' }
 end
 
 function Source.get_keyword_pattern()
-  return "."
+  return '.'
 end
 
 function Source.get_debug_name()
@@ -228,7 +228,7 @@ function Source._do_complete(self, ctx)
       line = cursor.line,
       offset = #before + 1,
       character = cursor.col,
-      indentation_size = (api.nvim_get_option_value('tabstop', {buf = 0}) or 4),
+      indentation_size = (api.nvim_get_option_value('tabstop', { buf = 0 }) or 4),
     },
   }
 
