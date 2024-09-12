@@ -170,14 +170,6 @@ function Source.is_available(self)
   return (self.job ~= 0)
 end
 
-function Source.get_trigger_characters()
-  return { '*' }
-end
-
-function Source.get_keyword_pattern()
-  return '.'
-end
-
 function Source.get_debug_name()
   return 'TabNine'
 end
